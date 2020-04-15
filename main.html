@@ -7,11 +7,13 @@
     <style>
 
     </style>
+    <script src="./Ball.js"></script>
+    <script src="./UserBall.js"></script>
+    <script src="./GameBall.js"></script>
     <script>
-    var screenHeight;
+    var backgroundDiv;
 
-        window.addEventListener("load", function(){
-            screenHeight = screen.height;
+        window.addEventListener("load", function(){            
             bodyLayoutInit();
             createUserBallShooter();
             createGameBalls();
@@ -21,9 +23,9 @@
         function bodyLayoutInit(){
             document.body.style.margin = 0 + "px";
 
-            var backgroundDiv = document.createElement("div");
-            backgroundDiv.style.width = parseInt(screenHeight / 1.7) + "px";
-            backgroundDiv.style.height = screenHeight + "px";
+            backgroundDiv = document.createElement("div");
+            backgroundDiv.style.width = parseInt(screen.height / 1.7) + "px";
+            backgroundDiv.style.height = screen.height + "px";
             backgroundDiv.style.position = "relative";
             backgroundDiv.style.margin = "auto";
             backgroundDiv.style.backgroundImage = "url('./images/background_temp.png')";
@@ -33,7 +35,6 @@
         }
     
         function createUserBallShooter(){
-
         }
 
         function createGameBalls(){

@@ -5,9 +5,10 @@ class Ball{
 
         this.centerX = centerX;
         this.centerY = centerY;
-        this.radius = 10;
+        this.radius = parseInt(parseInt(backgroundDiv.style.width) / 11);
+        console.log("ball radius : " + this.radius);
 
-        this.img.src = "../images/ball_temp.png";
+        this.img.src = "./images/ball_temp.png";
 
         this.img.style.position = "absolute";
 
