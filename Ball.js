@@ -6,7 +6,6 @@ class Ball{
         this.centerX = centerX;
         this.centerY = centerY;
         this.radius = radius;
-        console.log("ball radius : " + this.radius);
 
         this.img.src = "./images/ball_temp.png";
 
@@ -16,10 +15,6 @@ class Ball{
         this.img.style.left = this.centerX - this.radius + "px";
         this.img.style.top = this.centerY - this.radius + "px";
 
-        this.container.appendChild(this.img);
-
-        
-        
-        
-    }
+        this.container.appendChild(this.img); 
+      }
 }

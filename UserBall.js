@@ -1,5 +1,5 @@
 class UserBall extends Ball{
-    constructor(container, centerX, centerY){
-        super(container, centerX, centerY);
+    constructor(container, centerX, centerY, radius){
+        super(container, centerX, centerY, radius);
     }
 }

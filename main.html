@@ -38,13 +38,14 @@
             document.body.appendChild(backgroundDiv);
 
             ballRadius = parseInt(parseInt(backgroundDiv.style.width) /11) /2;
+            console.log("ball radius : " + ballRadius);
 
             gameBallDiv = document.createElement("div");
             gameBallDiv.style.width = parseInt(backgroundDiv.style.width)+"px";
-            // gameBallDiv.style.height = ballRadius*2 *30+"px";
+            // gameBallDiv.style.height = ballRadius*2 *30 + "px";
             gameBallDiv.style.position = "absolute";
             gameBallDiv.style.left = backgroundDiv.style.left;
-            gameBallDiv.style.top = (-1) * ballRadius*2 *23 + "px";
+            gameBallDiv.style.top = (-1) * ballRadius*2 *25 + "px";
             // gameBallDiv.style.margin = "auto";
             // gameBallDiv.style.overflow = "hidden";
             backgroundDiv.appendChild(gameBallDiv);
@@ -68,9 +69,15 @@
             }
         }
 
+        function moveGameBallDiv(){
+            gameBallDiv.style.top = parseInt(gameBallDiv.style.top) + ballRadius * 2 + "px";
+        }
+
         function gameLoop(){
             console.log("gameLoop() called...");
-            setTimeout("gameLoop()", 100);
+            moveGameBallDiv();
+
+            setTimeout("gameLoop()", 7000);
         }
     </script>
 </head>
