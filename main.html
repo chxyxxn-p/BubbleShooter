@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Park Cho-yeon JavaScript Project :: Bubble Shooter</title>
+    <style>
+
+    </style>
+    <script>
+    var screenHeight;
+
+        window.addEventListener("load", function(){
+            screenHeight = screen.height;
+            bodyLayoutInit();
+            createUserBallShooter();
+            createGameBalls();
+            gameLoop();
+        });
+
+        function bodyLayoutInit(){
+            document.body.style.margin = 0 + "px";
+
+            var backgroundDiv = document.createElement("div");
+            backgroundDiv.style.width = parseInt(screenHeight / 1.7) + "px";
+            backgroundDiv.style.height = screenHeight + "px";
+            backgroundDiv.style.position = "relative";
+            backgroundDiv.style.margin = "auto";
+            backgroundDiv.style.backgroundImage = "url('./images/background_temp.png')";
+            document.body.appendChild(backgroundDiv);
+
+            console.log("screenX : " + parseInt(backgroundDiv.style.width) + " screenY : " + parseInt(backgroundDiv.style.height));
+        }
+    
+        function createUserBallShooter(){
+
+        }
+
+        function createGameBalls(){
+
+        }
+
+        function gameLoop(){
+            console.log("gameLoop() called...");
+            setTimeout("gameLoop()", 100);
+        }
+    </script>
+</head>
+<body>
+    
+</body>
+</html>
