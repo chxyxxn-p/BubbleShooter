@@ -1,5 +1,5 @@
 class GameBall extends Ball{
-    constructor(backgroundDiv, centerX, centerY){
-        super(backgroundDiv, centerX, centerY);
+    constructor(container, centerX, centerY){
+        super(container, centerX, centerY);
     }
 }

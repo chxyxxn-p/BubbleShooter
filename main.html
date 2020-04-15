@@ -12,6 +12,9 @@
     <script src="./GameBall.js"></script>
     <script>
     var backgroundDiv;
+    var ballRadius;
+    var gameBallDiv;
+    var gameBallArr = new Array();
 
         window.addEventListener("load", function(){            
             bodyLayoutInit();
@@ -21,24 +24,48 @@
         });
 
         function bodyLayoutInit(){
-            document.body.style.margin = 0 + "px";
+            document.body.style.margin = 0+"px";
+            document.body.style.position = "relative";
 
             backgroundDiv = document.createElement("div");
-            backgroundDiv.style.width = parseInt(screen.height / 1.7) + "px";
-            backgroundDiv.style.height = screen.height + "px";
+            backgroundDiv.style.width = parseInt(screen.height/1.7)+"px";
+            backgroundDiv.style.height = screen.height+"px";
             backgroundDiv.style.position = "relative";
+            // backgroundDiv.style.left = 0 + "px";
+            // backgroundDiv.style.top = 0 + "px";
             backgroundDiv.style.margin = "auto";
             backgroundDiv.style.backgroundImage = "url('./images/background_temp.png')";
             document.body.appendChild(backgroundDiv);
 
-            console.log("screenX : " + parseInt(backgroundDiv.style.width) + " screenY : " + parseInt(backgroundDiv.style.height));
+            ballRadius = parseInt(parseInt(backgroundDiv.style.width) /11) /2;
+
+            gameBallDiv = document.createElement("div");
+            gameBallDiv.style.width = parseInt(backgroundDiv.style.width)+"px";
+            // gameBallDiv.style.height = ballRadius*2 *30+"px";
+            gameBallDiv.style.position = "absolute";
+            gameBallDiv.style.left = backgroundDiv.style.left;
+            gameBallDiv.style.top = (-1) * ballRadius*2 *23 + "px";
+            // gameBallDiv.style.margin = "auto";
+            // gameBallDiv.style.overflow = "hidden";
+            backgroundDiv.appendChild(gameBallDiv);
+
+            // console.log("screenX : "+parseInt(backgroundDiv.style.width)+" screenY : "+parseInt(backgroundDiv.style.height));
         }
     
         function createUserBallShooter(){
         }
 
         function createGameBalls(){
+            var gap = (parseInt(backgroundDiv.style.width)-ballRadius*2*11) /2;
 
+            for(var i = 0 ; i < 30; i++){
+                var tempArr = [];
+                for(var j = 0 ; j < (i%2 == 0 ? 11 : 10) ; j++){
+                    var gbTemp = new GameBall(gameBallDiv, gap+ (2*j + 1 + i%2)*ballRadius, (2*i + 1)*ballRadius - i*(ballRadius/2 - 5), ballRadius);
+                    tempArr.push(gbTemp);
+                }
+                gameBallArr.push(tempArr);
+            }
         }
 
         function gameLoop(){
