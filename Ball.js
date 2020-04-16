@@ -1,5 +1,5 @@
 class Ball{
-    constructor(container, centerX, centerY, radius){
+    constructor(src, container, centerX, centerY, radius){
         this.container = container;
         this.img = document.createElement("img");
 
@@ -7,7 +7,7 @@ class Ball{
         this.centerY = centerY;
         this.radius = radius;
 
-        this.img.src = "./images/ball_temp.png";
+        this.img.src = src;
 
         this.img.style.position = "absolute";
 
