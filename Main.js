@@ -5,6 +5,7 @@ var ballRow = 20;
 
 var backgroundDiv;
 var gameBallDiv;
+var pointerImg;
 
 var gameBallArr = new Array();
 var userBallArr = new Array();
@@ -13,6 +14,7 @@ window.addEventListener("load", function () {
     bodyLayoutInit();
     createUserBallShooter();
     createGameBalls();
+    listenMouseEvent();
     gameLoop();
 });
 
@@ -49,6 +51,20 @@ function bodyLayoutInit() {
 }
 
 function createUserBallShooter() {
+    // shooter 생성
+    // 1) 받침대
+
+    // 2) 화살표
+    pointerImg = document.createElement("img");
+    pointerImg.src = "./images/pointer.png";
+    pointerImg.style.width =  ballRadius+ "px";
+    pointerImg.style.height = ballRadius*7 + "px";
+    pointerImg.style.position = "absolute";
+    pointerImg.style.left = parseInt(backgroundDiv.style.width)/2 - parseInt(pointerImg.style.width)/2 + "px";
+    pointerImg.style.top = parseInt(backgroundDiv.style.height) - ballRadius * 3 -  parseInt(pointerImg.style.height) + "px";
+    backgroundDiv.appendChild(pointerImg);
+
+    // gameBallRow 수 만큼 userBall 생성
     for (var i = 0; i < ballRow; i++) {
         var gbTemp = new UserBall(
             "./images/ball_" + ballFileNameArr[parseInt(Math.random() * 5)] + ".png",
@@ -63,7 +79,7 @@ function createGameBalls() {
     // 11개의 gameBall 만들고 남는 화면 여분 공간 2등분(각 줄 시작 위치 조절)
     var gap = (parseInt(backgroundDiv.style.width) - ballRadius * 2 * 11) / 2;
 
-    // gameBallArr에 2차원으로 GameBall 객체 push
+    // gameBallArr에 2차원으로 GameBall 객체 생성
     for (var i = 0; i < ballRow; i++) {
         var tempArr = [];
         for (var j = 0; j < (i % 2 == 0 ? 11 : 10); j++) {
@@ -84,11 +100,13 @@ function moveGameBallDiv() {
     gameBallDiv.style.top = parseInt(gameBallDiv.style.top) + ballRadius * 2 + "px";
 }
 
+
+
 function gameLoop() {
     console.log("gameLoop() called...");
     moveGameBallDiv();
 
-    
+
 
     // 7000ms(7s)후에 gameLoop() 호출(재귀호출형태)
     setTimeout("gameLoop()", 7000);
