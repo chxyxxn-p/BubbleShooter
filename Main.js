@@ -1,8 +1,11 @@
 var ballFileNameArr = ["red", "yellow", "green", "blue", "purple"];
 
-var backgroundDiv;
 var ballRadius;
+var ballRow = 20;
+
+var backgroundDiv;
 var gameBallDiv;
+
 var gameBallArr = new Array();
 
     window.addEventListener("load", function(){            
@@ -25,6 +28,7 @@ var gameBallArr = new Array();
             // backgroundDiv.style.left = 0 + "px";
             // backgroundDiv.style.top = 0 + "px";
         backgroundDiv.style.margin = "auto";
+        backgroundDiv.style.overflow = "hidden";
         backgroundDiv.style.backgroundImage = "url('./images/background_temp.png')";
         document.body.appendChild(backgroundDiv);
 
@@ -37,7 +41,7 @@ var gameBallArr = new Array();
             // gameBallDiv.style.height = ballRadius*2 *30 + "px";
         gameBallDiv.style.position = "absolute";
         gameBallDiv.style.left = backgroundDiv.style.left;
-        gameBallDiv.style.top = (-1) * ballRadius*2 *25 + "px";
+        gameBallDiv.style.top = (-1) * (2*ballRadius - 8) *(ballRow-3) + "px";
             // gameBallDiv.style.margin = "auto";
             // gameBallDiv.style.overflow = "hidden";
         backgroundDiv.appendChild(gameBallDiv);
@@ -51,14 +55,15 @@ var gameBallArr = new Array();
         var gap = (parseInt(backgroundDiv.style.width)-ballRadius*2*11) /2;
 
         // gameBallArr에 2차원으로 GameBall 객체 push
-        for(var i = 0 ; i < 30; i++){
+        for(var i = 0 ; i < ballRow; i++){
             var tempArr = [];
             for(var j = 0 ; j < (i%2 == 0 ? 11 : 10) ; j++){
                 var gbTemp = new GameBall(
                     "./images/ball_" + ballFileNameArr[parseInt(Math.random() * 5)] + ".png",
                     gameBallDiv,  //cntainer / 각 GameBall img는 gameBallDiv에 부착(gameBallDiv는 backgroundDiv에 부착되어있음)
                     gap+ (2*j + 1 + i%2)*ballRadius,    //centerX / gap + 1*r : 기본적으로 띄워질 부분, 2*j*r : 몇번째 공인지에 따라 간격 넓어짐, i%2*r : 한줄씩 번갈아가면서 갯수가 달라짐 
-                    (2*i + 1)*ballRadius - i*(ballRadius/2 - 7),    //centerY : 1*r : 기본적으로 띄워질 부분, 2*i*r : 몇번째 공인지에 따라 간격 넓어짐 - i*(r/2 -5) : 엇갈려있는 공 밀착시키기 위해 소량 이동
+                    (ballRadius + i*(2*ballRadius - 8)),
+                    // (2*i + 1)*ballRadius - i*(ballRadius/2 - 7),    //centerY : 1*r : 기본적으로 띄워질 부분, 2*i*r : 몇번째 공인지에 따라 간격 넓어짐 - i*(r/2 -5) : 엇갈려있는 공 밀착시키기 위해 소량 이동
                     ballRadius);    //radius
                 tempArr.push(gbTemp);   //각 줄 마다 tempArr 새로 만들고
             }
