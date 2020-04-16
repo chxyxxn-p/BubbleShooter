@@ -17,4 +17,7 @@ class Ball{
 
         this.container.appendChild(this.img); 
       }
+
+      tick(){}
+      render(){}
 }
