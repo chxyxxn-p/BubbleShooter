@@ -96,7 +96,7 @@ function createGameBalls() {
                 "./images/ball_" + ballFileNameArr[randomColorNum] + ".png",
                 backgroundDiv,  //container / 각 GameBall img는 gameBallDiv에 부착(gameBallDiv는 backgroundDiv에 부착되어있음) -> backgroundDiv
                 gap + (2 * j + 1 + i % 2) * ballRadius,    //centerX / gap + 1*r : 기본적으로 띄워질 부분, 2*j*r : 몇번째 공인지에 따라 간격 넓어짐, i%2*r : 한줄씩 번갈아가면서 갯수가 달라짐 
-                -(screen.height - ballRadius*10) + (ballRadius + i * (2 * ballRadius - ballRadius / 3)),    //centerY / r : 기본적으로 띄워질 부분, i* : 몇번째 공인지, (2*r - 8) : 엇갈려있는 공 밀착시키기 위해 지름보다 조금 작게 centerY값 위치시킴
+                -(screen.height - ballRadius*10) + (ballRadius + i * (5/3 *ballRadius)),    //centerY / r : 기본적으로 띄워질 부분, i* : 몇번째 공인지, (2*r - 8) : 엇갈려있는 공 밀착시키기 위해 지름보다 조금 작게 centerY값 위치시킴
                 ballRadius);    //radius
             tempArr.push(gbTemp);   //각 줄 마다 tempArr 새로 만들고
         }
