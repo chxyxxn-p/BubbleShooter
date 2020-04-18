@@ -3,7 +3,7 @@ var ballFileNameArr = ["red", "yellow", "green", "blue", "purple"];
 var ballRadius;
 
 var ballRow = 20;
-var gameSpeed = 20;
+var gameSpeed = 30;
 
 var backgroundDiv;
 // var gameBallDiv;
@@ -64,7 +64,7 @@ function createUserBallShooter() {
     pointerImg = document.createElement("img");
     pointerImg.src = "./images/pointer.png";
     pointerImg.style.width = ballRadius + "px";
-    pointerImg.style.height = ballRadius * 7 + "px";
+    pointerImg.style.height = ballRadius * 6 + "px";
     pointerImg.style.position = "absolute";
     pointerImg.style.left = parseInt(backgroundDiv.style.width) / 2 - parseInt(pointerImg.style.width) / 2 + "px";
     pointerImg.style.top = parseInt(backgroundDiv.style.height) - ballRadius * 3 - parseInt(pointerImg.style.height) + "px";
@@ -111,10 +111,16 @@ function createGameBalls() {
 function listenEvent() {
     window.addEventListener("keydown", function (e) {
         if (e.keyCode == 32) {
+            console.log(pointerImgRotateDeg);
             if (userBallShootReadyFlag) {
                 userBallShootReadyFlag = false;
-                userBallArr[0].velX = 5;
+                var degreeNegative = 1;
+                if (pointerImgRotateDeg < 0) {
+                    degreeNegative = -1;
+                }
+                userBallArr[0].velX = 5 * degreeNegative / Math.tan(Math.PI / 180 * (90 - degreeNegative * pointerImgRotateDeg));
                 userBallArr[0].velY = -5;
+
                 moveUserBallImgs();
             }
 
@@ -123,7 +129,7 @@ function listenEvent() {
 }
 
 function moveUserBallImgs() {
-    for (var i = 0; i < userBallArr.length; i++) {
+    for (var i = 1; i < userBallArr.length; i++) {
         userBallArr[i].centerY -= ballRadius * 2;
     }
 }
@@ -132,7 +138,7 @@ function gameLoop() {
     // console.log("gameLoop() called...");
 
     gameBallImgsMoveCount++;
-    if (gameBallImgsMoveCount == 7000 / 20) {
+    if (gameBallImgsMoveCount == 7000 / gameSpeed) {
         moveGameBallImgs();
         gameBallImgsMoveCount = 0;
     }
@@ -166,14 +172,16 @@ function moveGameBallImgs() {
 }
 
 function movePointerImg() {
-    if (pointerImgRotateDeg > 70 || pointerImgRotateDeg < -70) {
-        pointerImgSpeed *= -1;
+    if (userBallShootReadyFlag) {
+        if (pointerImgRotateDeg > 70 || pointerImgRotateDeg < -70) {
+            pointerImgSpeed *= -1;
+        }
+
+        pointerImgRotateDeg += pointerImgSpeed;
+
+        pointerImg.style.transform = "rotate(" + pointerImgRotateDeg + "deg)";
+
     }
-
-    pointerImgRotateDeg += pointerImgSpeed;
-
-    pointerImg.style.transform = "rotate(" + pointerImgRotateDeg + "deg)";
-
 }
 
 function checkAfterShootUserBall() {
@@ -195,7 +203,7 @@ function checkAfterShootUserBall() {
                 //     if(userBallArr[n].centerY - gameBallArr[i].centerY >= 5/3 * ballRadius){
                 //         break;
                 //     }
-                    
+
                 //     userBallArr[n].centerY  += 0.01;
                 // }
 
