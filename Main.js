@@ -17,6 +17,8 @@ var gameBallImgsMoveCount = 0;
 var pointerImgSpeed = 2;
 var pointerImgRotateDeg = 0;
 
+var userBallShootReadyFlag = true;
+
 window.addEventListener("load", function () {
     bodyLayoutInit();
     createUserBallShooter();
@@ -76,7 +78,7 @@ function createUserBallShooter() {
             randomColorNum,
             "./images/ball_" + ballFileNameArr[randomColorNum] + ".png",
             backgroundDiv,  //container
-            parseInt(backgroundDiv.style.width) / 2 ,    //centerX / backgroundDiv 중앙에 위치
+            parseInt(backgroundDiv.style.width) / 2,    //centerX / backgroundDiv 중앙에 위치
             parseInt(backgroundDiv.style.height) - ballRadius * 3 + i * 2 * ballRadius,    //centerY / backgroundDiv와 공 1개만큼의 거리를 두고 첫번째 공 아래로 연달아 위치
             ballRadius);    //radius
         userBallArr.push(gbTemp);  //userBallArr에 push
@@ -108,16 +110,20 @@ function createGameBalls() {
 
 function listenEvent() {
     window.addEventListener("keydown", function (e) {
-        if(e.keyCode == 32){
-        userBallArr[0].velX = 5;
-        userBallArr[0].velY = -5;
-        moveUserBallImgs();
+        if (e.keyCode == 32) {
+            if (userBallShootReadyFlag) {
+                userBallShootReadyFlag = false;
+                userBallArr[0].velX = 5;
+                userBallArr[0].velY = -5;
+                moveUserBallImgs();
+            }
+
         }
     });
 }
 
-function moveUserBallImgs(){
-    for(var i = 0 ; i < userBallArr.length ; i++){
+function moveUserBallImgs() {
+    for (var i = 0; i < userBallArr.length; i++) {
         userBallArr[i].centerY -= ballRadius * 2;
     }
 }
@@ -134,7 +140,7 @@ function gameLoop() {
     movePointerImg();
 
     for (var i = 0; i < userBallArr.length; i++) {
-        checkAfterShootUserBall(i);
+        checkAfterShootUserBall();
         userBallArr[i].tick();
         userBallArr[i].render();
     }
@@ -159,8 +165,8 @@ function moveGameBallImgs() {
     }
 }
 
-function movePointerImg(){
-    if(pointerImgRotateDeg > 90 || pointerImgRotateDeg < -90){
+function movePointerImg() {
+    if (pointerImgRotateDeg > 70 || pointerImgRotateDeg < -70) {
         pointerImgSpeed *= -1;
     }
 
@@ -170,22 +176,34 @@ function movePointerImg(){
 
 }
 
-function checkAfterShootUserBall(n){
+function checkAfterShootUserBall() {
     for (var i = 0; i < gameBallArr.length; i++) {
 
-        if (ballCollisionCheck(gameBallArr[i], userBallArr[n])) {
-            if (gameBallArr[i].colorNum == userBallArr[n].colorNum) {
+        if (ballCollisionCheck(gameBallArr[i], userBallArr[0])) {
+            if (gameBallArr[i].colorNum == userBallArr[0].colorNum) {
 
                 // removeChild
-                console.log("this will be removed");
+                backgroundDiv.removeChild(gameBallArr[i]);
+                backgroundDiv.removeChild(userBallArr[0]);
 
+                gameBallArr.splice(i, 1);
             } else {
-                userBallArr[n].velX = 0;
-                userBallArr[n].velY = 0;
-                
-                gameBallArr.push(userBallArr[n]);
-                userBallArr.splice(n, 1);
+                userBallArr[0].velX = 0;
+                userBallArr[0].velY = 0;
+
+                // while(true){
+                //     if(userBallArr[n].centerY - gameBallArr[i].centerY >= 5/3 * ballRadius){
+                //         break;
+                //     }
+                    
+                //     userBallArr[n].centerY  += 0.01;
+                // }
+
+                gameBallArr.push(userBallArr[0]);
             }
+            userBallArr.splice(0, 1);
+            userBallShootReadyFlag = true;
+            break;
         }
     }
 }
