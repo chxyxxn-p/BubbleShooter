@@ -88,7 +88,6 @@ function createGameBalls() {
 
     // gameBallArr에 2차원으로 GameBall 객체 생성
     for (var i = 0; i < ballRow; i++) {
-        var tempArr = [];
         for (var j = 0; j < (i % 2 == 0 ? 11 : 10); j++) {
             var randomColorNum = parseInt(Math.random() * 5);
             var gbTemp = new GameBall(
@@ -96,11 +95,10 @@ function createGameBalls() {
                 "./images/ball_" + ballFileNameArr[randomColorNum] + ".png",
                 backgroundDiv,  //container / 각 GameBall img는 gameBallDiv에 부착(gameBallDiv는 backgroundDiv에 부착되어있음) -> backgroundDiv
                 gap + (2 * j + 1 + i % 2) * ballRadius,    //centerX / gap + 1*r : 기본적으로 띄워질 부분, 2*j*r : 몇번째 공인지에 따라 간격 넓어짐, i%2*r : 한줄씩 번갈아가면서 갯수가 달라짐 
-                -(screen.height - ballRadius*10) + (ballRadius + i * (5/3 *ballRadius)),    //centerY / r : 기본적으로 띄워질 부분, i* : 몇번째 공인지, (2*r - 8) : 엇갈려있는 공 밀착시키기 위해 지름보다 조금 작게 centerY값 위치시킴
+                -(screen.height - ballRadius * 10) + (ballRadius + i * (5 / 3 * ballRadius)),    //centerY / r : 기본적으로 띄워질 부분, i* : 몇번째 공인지, (2*r - 8) : 엇갈려있는 공 밀착시키기 위해 지름보다 조금 작게 centerY값 위치시킴
                 ballRadius);    //radius
-            tempArr.push(gbTemp);   //각 줄 마다 tempArr 새로 만들고
+            gameBallArr.push(gbTemp);
         }
-        gameBallArr.push(tempArr);  //tempArr를 통으로 gameBallArr에 push -> 2차원배열 형태
     }
 }
 
@@ -138,13 +136,12 @@ function gameLoop() {
         userBallArr[i].render();
     }
 
-    for (var j = 0; j < gameBallArr.length; j++) {
-        for (var i = 0; i < gameBallArr[j].length; i++) {
+    for (var i = 0; i < gameBallArr.length; i++) {
 
-            gameBallArr[j][i].tick();
-            gameBallArr[j][i].render();
-        }
+        gameBallArr[i].tick();
+        gameBallArr[i].render();
     }
+
 
     // 7000ms(7s)후에 gameLoop() 호출(재귀호출형태)
     setTimeout("gameLoop()", 20);
@@ -154,9 +151,8 @@ function moveGameBallDiv() {
     // gameLoop() 돌 때마다 gameBallDiv는 공 지름크기만큼 아래로 내려옴
     // gameBallDiv.style.top = parseInt(gameBallDiv.style.top) + ballRadius * 2 + "px";
 
-    for (var j = 0; j < gameBallArr.length; j++) {
-        for (var i = 0; i < gameBallArr[j].length; i++) {
-            gameBallArr[j][i].centerY += ballRadius;
-        }
+    for (var i = 0; i < gameBallArr.length; i++) {
+        gameBallArr[i].centerY += ballRadius;
     }
+
 }

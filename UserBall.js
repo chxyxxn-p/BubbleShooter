@@ -20,24 +20,24 @@ class UserBall extends Ball {
             this.velY *= (-1);
         }
 
-        for (var j = 0; j < gameBallArr.length; j++) {
-            for (var i = 0; i < gameBallArr[j].length; i++) {
+        for (var i = 0; i < gameBallArr.length; i++) {
 
-                if (ballCollisionCheck(gameBallArr[j][i], this)) {
-                    if (gameBallArr[j][i].colorNum == this.colorNum) {
+            if (ballCollisionCheck(gameBallArr[i], this)) {
+                if (gameBallArr[i].colorNum == this.colorNum) {
 
-                        // removeChild
-                        console.log("this will be removed");    
+                    // removeChild
+                    console.log("this will be removed");
 
-                    } else {
-                        this.velX = 0;
-                        this.velY = 0;
-                        this.centerY = gameBallArr[j][i].centerY + 5 / 3 * this.radius;
-                        // gameBallArr에 추가
-                    }
+                } else {
+                    this.velX = 0;
+                    this.velY = 0;
+                    this.centerY = gameBallArr[i].centerY + 5 / 3 * this.radius;
+
+                    // gameBallArr에 추가
                 }
             }
         }
+
 
     }
 
