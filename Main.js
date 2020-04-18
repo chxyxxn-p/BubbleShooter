@@ -1,16 +1,20 @@
 var ballFileNameArr = ["red", "yellow", "green", "blue", "purple"];
 
 var ballRadius;
+
 var ballRow = 20;
+var gameSpeed = 20;
 
 var backgroundDiv;
-var gameBallDiv;
+// var gameBallDiv;
 var pointerImg;
 
 var gameBallArr = new Array();
 var userBallArr = new Array();
 
-var gameBallDivMoveCount = 0;
+var gameBallImgsMoveCount = 0;
+
+var pointerImgSpeed = 2;
 var pointerImgRotateDeg = 0;
 
 window.addEventListener("load", function () {
@@ -41,16 +45,16 @@ function bodyLayoutInit() {
     // ballRadius value set (backgroundDiv width값이 정해진 후 비율에 맞도록)
     ballRadius = parseInt(parseInt(backgroundDiv.style.width) / 11) / 2;
 
-    // gameBallDiv create, style
-    gameBallDiv = document.createElement("div");
-    gameBallDiv.style.width = parseInt(backgroundDiv.style.width) + "px";
-    // gameBallDiv.style.height = ballRadius*2 *30 + "px";
-    gameBallDiv.style.position = "absolute";
-    gameBallDiv.style.left = backgroundDiv.style.left;
-    gameBallDiv.style.top = (-1) * (2 * ballRadius - 8) * (ballRow - 3) + "px";
-    // gameBallDiv.style.margin = "auto";
-    // gameBallDiv.style.overflow = "hidden";
-    backgroundDiv.appendChild(gameBallDiv);
+    // // gameBallDiv create, style
+    // gameBallDiv = document.createElement("div");
+    // gameBallDiv.style.width = parseInt(backgroundDiv.style.width) + "px";
+    // // gameBallDiv.style.height = ballRadius*2 *30 + "px";
+    // gameBallDiv.style.position = "absolute";
+    // gameBallDiv.style.left = backgroundDiv.style.left;
+    // gameBallDiv.style.top = (-1) * (2 * ballRadius - 8) * (ballRow - 3) + "px";
+    // // gameBallDiv.style.margin = "auto";
+    // // gameBallDiv.style.overflow = "hidden";
+    // backgroundDiv.appendChild(gameBallDiv);
 }
 
 function createUserBallShooter() {
@@ -103,13 +107,13 @@ function createGameBalls() {
 }
 
 function listenMouseEvent() {
-    window.addEventListener("mousemove", function () {
-        // 기존 위치와 마우스 커서 위치 각도 구해서
-        // pointerImg.style.rotate?
+    // window.addEventListener("mousemove", function () {
+    //     // 기존 위치와 마우스 커서 위치 각도 구해서
+    //     // pointerImg.style.rotate?
 
-        // 마우스 움직임있을때마다 같은 방향으로 회전하도록 설정(마우스위치 연동 x)
-        pointerImg.style.transform = "rotate(" + pointerImgRotateDeg++ + "deg)";
-    });
+    //     // 마우스 움직임있을때마다 같은 방향으로 회전하도록 설정(마우스위치 연동 x)
+    //     pointerImg.style.transform = "rotate(" + pointerImgRotateDeg++ + "deg)";
+    // });
 
     userBallArr[0].img.addEventListener("click", function () {
         // userBall 지금 것 발사하고
@@ -125,11 +129,13 @@ function listenMouseEvent() {
 function gameLoop() {
     // console.log("gameLoop() called...");
 
-    gameBallDivMoveCount++;
-    if (gameBallDivMoveCount == 7000 / 20) {
-        moveGameBallDiv();
-        gameBallDivMoveCount = 0;
+    gameBallImgsMoveCount++;
+    if (gameBallImgsMoveCount == 7000 / 20) {
+        moveGameBallImgs();
+        gameBallImgsMoveCount = 0;
     }
+
+    movePointerImg();
 
     for (var i = 0; i < userBallArr.length; i++) {
         checkAfterShootUserBall(i);
@@ -145,16 +151,27 @@ function gameLoop() {
 
 
     // 7000ms(7s)후에 gameLoop() 호출(재귀호출형태)
-    setTimeout("gameLoop()", 20);
+    setTimeout("gameLoop()", gameSpeed);
 }
 
-function moveGameBallDiv() {
+function moveGameBallImgs() {
     // gameLoop() 돌 때마다 gameBallDiv는 공 지름크기만큼 아래로 내려옴
     // gameBallDiv.style.top = parseInt(gameBallDiv.style.top) + ballRadius * 2 + "px";
 
     for (var i = 0; i < gameBallArr.length; i++) {
         gameBallArr[i].centerY += ballRadius;
     }
+}
+
+function movePointerImg(){
+    if(pointerImgRotateDeg > 90 || pointerImgRotateDeg < -90){
+        pointerImgSpeed *= -1;
+    }
+
+    pointerImgRotateDeg += pointerImgSpeed;
+
+    pointerImg.style.transform = "rotate(" + pointerImgRotateDeg + "deg)";
+
 }
 
 function checkAfterShootUserBall(n){
