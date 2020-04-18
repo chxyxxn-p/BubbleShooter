@@ -21,7 +21,7 @@ window.addEventListener("load", function () {
     bodyLayoutInit();
     createUserBallShooter();
     createGameBalls();
-    listenMouseEvent();
+    listenEvent();
     gameLoop();
 });
 
@@ -58,10 +58,7 @@ function bodyLayoutInit() {
 }
 
 function createUserBallShooter() {
-    // shooter 생성
-    // 1) 받침대
-
-    // 2) 화살표
+    // 1) 화살표
     pointerImg = document.createElement("img");
     pointerImg.src = "./images/pointer.png";
     pointerImg.style.width = ballRadius + "px";
@@ -72,18 +69,21 @@ function createUserBallShooter() {
     pointerImg.style.transformOrigin = "bottom";
     backgroundDiv.appendChild(pointerImg);
 
-    // gameBallRow 수 만큼 userBall 생성
+    // 2) gameBallRow 수 만큼 userBall 생성
     for (var i = 0; i < ballRow; i++) {
         var randomColorNum = parseInt(Math.random() * 5);
         var gbTemp = new UserBall(
             randomColorNum,
             "./images/ball_" + ballFileNameArr[randomColorNum] + ".png",
             backgroundDiv,  //container
-            parseInt(backgroundDiv.style.width) / 2 + i * 2 * ballRadius,    //centerX / 첫번째 공이 backgroundDiv 중앙에 위치하고 그 오른쪽에 연달아 위치
-            parseInt(backgroundDiv.style.height) - ballRadius * 3,    //centerY / backgroundDiv와 공 1개만큼의 거리를 둠
+            parseInt(backgroundDiv.style.width) / 2 ,    //centerX / backgroundDiv 중앙에 위치
+            parseInt(backgroundDiv.style.height) - ballRadius * 3 + i * 2 * ballRadius,    //centerY / backgroundDiv와 공 1개만큼의 거리를 두고 첫번째 공 아래로 연달아 위치
             ballRadius);    //radius
         userBallArr.push(gbTemp);  //userBallArr에 push
     }
+
+    //3) shooter 받침대
+
 }
 
 function createGameBalls() {
@@ -106,24 +106,20 @@ function createGameBalls() {
     }
 }
 
-function listenMouseEvent() {
-    // window.addEventListener("mousemove", function () {
-    //     // 기존 위치와 마우스 커서 위치 각도 구해서
-    //     // pointerImg.style.rotate?
-
-    //     // 마우스 움직임있을때마다 같은 방향으로 회전하도록 설정(마우스위치 연동 x)
-    //     pointerImg.style.transform = "rotate(" + pointerImgRotateDeg++ + "deg)";
-    // });
-
-    userBallArr[0].img.addEventListener("click", function () {
-        // userBall 지금 것 발사하고
-        // userBallArr 다음것들 왼쪽으로 한칸씩이동
+function listenEvent() {
+    window.addEventListener("keydown", function (e) {
+        if(e.keyCode == 32){
         userBallArr[0].velX = 5;
         userBallArr[0].velY = -5;
-
-
-
+        moveUserBallImgs();
+        }
     });
+}
+
+function moveUserBallImgs(){
+    for(var i = 0 ; i < userBallArr.length ; i++){
+        userBallArr[i].centerY -= ballRadius * 2;
+    }
 }
 
 function gameLoop() {
