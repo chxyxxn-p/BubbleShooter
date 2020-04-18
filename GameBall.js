@@ -1,6 +1,6 @@
 class GameBall extends Ball{
-    constructor(src, container, centerX, centerY, radius){
-        super(src, container, centerX, centerY, radius);
+    constructor(colorNum, src, container, centerX, centerY, radius){
+        super(colorNum, src, container, centerX, centerY, radius);
 
     }
     
@@ -8,7 +8,7 @@ class GameBall extends Ball{
     }
 
     render(){
-        
+
         super.render();
 
     }

@@ -1,6 +1,6 @@
 class UserBall extends Ball{
-    constructor(src, container, centerX, centerY, radius){
-        super(src, container, centerX, centerY, radius);
+    constructor(colorNum, src, container, centerX, centerY, radius){
+        super(colorNum, src, container, centerX, centerY, radius);
 
         this.velX = 0;
         this.velY = 0;
@@ -20,12 +20,21 @@ class UserBall extends Ball{
             this.velY *= (-1);
         }
 
+        for (var j = 0; j < gameBallArr.length; j++) {
+            for (var i = 0; i < gameBallArr[j].length; i++) {
+    
+                var result = ballCollisionCheck(gameBallArr[j][i], this);
+                if(result){
+                    console.log("collision!");
+                }
+            }
+        }
+
     }
 
     render(){
         
         super.render();
-        this.img.style.left = this.centerX - this.radius + "px";
-        this.img.style.top = this.centerY - this.radius + "px";
+        
     }
 }

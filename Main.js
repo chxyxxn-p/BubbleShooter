@@ -70,8 +70,10 @@ function createUserBallShooter() {
 
     // gameBallRow 수 만큼 userBall 생성
     for (var i = 0; i < ballRow; i++) {
+        var randomColorNum = parseInt(Math.random() * 5);
         var gbTemp = new UserBall(
-            "./images/ball_" + ballFileNameArr[parseInt(Math.random() * 5)] + ".png",
+            randomColorNum,
+            "./images/ball_" + ballFileNameArr[randomColorNum] + ".png",
             backgroundDiv,  //container
             parseInt(backgroundDiv.style.width) / 2 + i * 2 * ballRadius,    //centerX / 첫번째 공이 backgroundDiv 중앙에 위치하고 그 오른쪽에 연달아 위치
             parseInt(backgroundDiv.style.height) - ballRadius * 3,    //centerY / backgroundDiv와 공 1개만큼의 거리를 둠
@@ -88,11 +90,13 @@ function createGameBalls() {
     for (var i = 0; i < ballRow; i++) {
         var tempArr = [];
         for (var j = 0; j < (i % 2 == 0 ? 11 : 10); j++) {
+            var randomColorNum = parseInt(Math.random() * 5);
             var gbTemp = new GameBall(
-                "./images/ball_" + ballFileNameArr[parseInt(Math.random() * 5)] + ".png",
-                gameBallDiv,  //container / 각 GameBall img는 gameBallDiv에 부착(gameBallDiv는 backgroundDiv에 부착되어있음)
+                randomColorNum,
+                "./images/ball_" + ballFileNameArr[randomColorNum] + ".png",
+                backgroundDiv,  //container / 각 GameBall img는 gameBallDiv에 부착(gameBallDiv는 backgroundDiv에 부착되어있음) -> backgroundDiv
                 gap + (2 * j + 1 + i % 2) * ballRadius,    //centerX / gap + 1*r : 기본적으로 띄워질 부분, 2*j*r : 몇번째 공인지에 따라 간격 넓어짐, i%2*r : 한줄씩 번갈아가면서 갯수가 달라짐 
-                (ballRadius + i * (2 * ballRadius - ballRadius / 3)),    //centerY / r : 기본적으로 띄워질 부분, i* : 몇번째 공인지, (2*r - 8) : 엇갈려있는 공 밀착시키기 위해 지름보다 조금 작게 centerY값 위치시킴
+                -(screen.height - ballRadius*10) + (ballRadius + i * (2 * ballRadius - ballRadius / 3)),    //centerY / r : 기본적으로 띄워질 부분, i* : 몇번째 공인지, (2*r - 8) : 엇갈려있는 공 밀착시키기 위해 지름보다 조금 작게 centerY값 위치시킴
                 ballRadius);    //radius
             tempArr.push(gbTemp);   //각 줄 마다 tempArr 새로 만들고
         }
@@ -121,7 +125,7 @@ function listenMouseEvent() {
 }
 
 function gameLoop() {
-    console.log("gameLoop() called...");
+    // console.log("gameLoop() called...");
 
     gameBallDivMoveCount++;
     if (gameBallDivMoveCount == 7000 / 20) {
@@ -136,6 +140,7 @@ function gameLoop() {
 
     for (var j = 0; j < gameBallArr.length; j++) {
         for (var i = 0; i < gameBallArr[j].length; i++) {
+
             gameBallArr[j][i].tick();
             gameBallArr[j][i].render();
         }
@@ -147,5 +152,11 @@ function gameLoop() {
 
 function moveGameBallDiv() {
     // gameLoop() 돌 때마다 gameBallDiv는 공 지름크기만큼 아래로 내려옴
-    gameBallDiv.style.top = parseInt(gameBallDiv.style.top) + ballRadius * 2 + "px";
+    // gameBallDiv.style.top = parseInt(gameBallDiv.style.top) + ballRadius * 2 + "px";
+
+    for (var j = 0; j < gameBallArr.length; j++) {
+        for (var i = 0; i < gameBallArr[j].length; i++) {
+            gameBallArr[j][i].centerY += ballRadius;
+        }
+    }
 }
