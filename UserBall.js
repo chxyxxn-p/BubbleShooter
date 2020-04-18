@@ -19,27 +19,7 @@ class UserBall extends Ball {
             || this.centerY - this.radius < 0) {
             this.velY *= (-1);
         }
-
-        for (var i = 0; i < gameBallArr.length; i++) {
-
-            if (ballCollisionCheck(gameBallArr[i], this)) {
-                if (gameBallArr[i].colorNum == this.colorNum) {
-
-                    // removeChild
-                    console.log("this will be removed");
-
-                } else {
-                    this.velX = 0;
-                    this.velY = 0;
-                    this.centerY = gameBallArr[i].centerY + 5 / 3 * this.radius;
-
-                    // gameBallArr에 추가
-                }
-            }
-        }
-
-
-    }
+}
 
     render() {
 

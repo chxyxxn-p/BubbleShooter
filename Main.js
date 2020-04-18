@@ -132,6 +132,7 @@ function gameLoop() {
     }
 
     for (var i = 0; i < userBallArr.length; i++) {
+        checkAfterShootUserBall(i);
         userBallArr[i].tick();
         userBallArr[i].render();
     }
@@ -154,5 +155,25 @@ function moveGameBallDiv() {
     for (var i = 0; i < gameBallArr.length; i++) {
         gameBallArr[i].centerY += ballRadius;
     }
+}
 
+function checkAfterShootUserBall(n){
+    for (var i = 0; i < gameBallArr.length; i++) {
+
+        if (ballCollisionCheck(gameBallArr[i], userBallArr[n])) {
+            if (gameBallArr[i].colorNum == userBallArr[n].colorNum) {
+
+                // removeChild
+                console.log("this will be removed");
+
+            } else {
+                userBallArr[n].velX = 0;
+                userBallArr[n].velY = 0;
+                userBallArr[n].centerY = gameBallArr[i].centerY + 5 / 3 * userBallArr[n].radius;
+            
+                gameBallArr.push(userBallArr[n]);
+                userBallArr.splice(n, 1);
+            }
+        }
+    }
 }
