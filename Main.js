@@ -169,8 +169,7 @@ function checkAfterShootUserBall(n){
             } else {
                 userBallArr[n].velX = 0;
                 userBallArr[n].velY = 0;
-                userBallArr[n].centerY = gameBallArr[i].centerY + 5 / 3 * userBallArr[n].radius;
-            
+                
                 gameBallArr.push(userBallArr[n]);
                 userBallArr.splice(n, 1);
             }

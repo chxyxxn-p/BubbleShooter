@@ -1,15 +1,8 @@
 function ballCollisionCheck(ball1, ball2){
-    var x1 = ball1.centerX;
-    var y1 = ball1.centerY;
-    var r1 = ball1.radius;
 
-    var x2 = ball2.centerX;
-    var y2 = ball2.centerY;
-    var r2 = ball2.radius;
-
-    var d = Math.sqrt( Math.pow(x2-x1, 2) + Math.pow(y2-y1, 2) );
-    // console.log(d + ", " + r1 + ", " + r2);
-    var result = (d <= r1 + r2);
+    var d = getDistanceBetweenTwoCircles(ball1, ball2);
+    
+    var result = (d <= ball1.radius + ball2.radius);
 
     return result;
 }
