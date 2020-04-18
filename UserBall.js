@@ -23,6 +23,8 @@ class UserBall extends Ball{
     }
 
     render(){
+        
+        super.render();
         this.img.style.left = this.centerX - this.radius + "px";
         this.img.style.top = this.centerY - this.radius + "px";
     }

@@ -16,8 +16,19 @@ class Ball{
         this.img.style.top = this.centerY - this.radius + "px";
 
         this.container.appendChild(this.img); 
+      
+        this.collisionFlag = false;
       }
 
-      tick(){}
-      render(){}
+      tick(){
+        //collision check method
+      }
+
+      render(){
+        if(this.collisionFlag){
+          this.container.removeChild(this.img);
+          
+          this.collisionFlag = false;
+        }
+      }
 }
