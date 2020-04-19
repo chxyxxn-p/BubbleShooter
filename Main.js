@@ -148,7 +148,7 @@ function gameLoop() {
 
     // 2) userBall, gameBall 충돌 검사 후 삭제
     for (var i = 0; i < userBallArr.length; i++) {
-        checkAfterShootUserBall();
+        checkCollisionAfterShootUserBall();
     }
 
     // 3) 키보드이벤트로 바뀐 velX, velY 적용하여 (+ 벽에 부딪히는 경우 처리하여) userBall 이동
@@ -195,18 +195,26 @@ function movePointerImg() {
     }
 }
 
-function checkAfterShootUserBall() {
+function checkCollisionAfterShootUserBall() {
     for (var i = 0; i < gameBallArr.length; i++) {
-
+        // shooting된 userBall은 항상 0번째(발사 후 userBallArr에서 splice하기 때문에)
+        // 충돌했을 경우
         if (ballCollisionCheck(gameBallArr[i], userBallArr[0])) {
+
+            // 같은 색일 경우 : userBall, gameBall 삭제 -> 삭제된 gameBall 주변 gameBall 반복 검사 후 연쇄 삭제
             if (gameBallArr[i].colorNum == userBallArr[0].colorNum) {
 
                 // removeChild
-                backgroundDiv.removeChild(gameBallArr[i]);
-                backgroundDiv.removeChild(userBallArr[0]);
+                backgroundDiv.removeChild(gameBallArr[i].img);
+                backgroundDiv.removeChild(userBallArr[0].img);
 
+                // gameBallArr에서 삭제
                 gameBallArr.splice(i, 1);
-            } else {
+            }
+
+            // 다른 색일 경우
+            else {
+                // 발사된 userBall 멈추기
                 userBallArr[0].velX = 0;
                 userBallArr[0].velY = 0;
 
@@ -218,9 +226,13 @@ function checkAfterShootUserBall() {
                 //     userBallArr[n].centerY  += 0.01;
                 // }
 
+                // userBallArr -> gameBallArr에 새로 추가
                 gameBallArr.push(userBallArr[0]);
             }
+            // userBallArr에서 삭제
             userBallArr.splice(0, 1);
+
+            // 다음 userBall shooting 활성화
             userBallShootReadyFlag = true;
             break;
         }
