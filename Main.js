@@ -110,10 +110,13 @@ function createGameBalls() {
 
 function listenEvent() {
     window.addEventListener("keydown", function (e) {
+        // spacebar 누르면 지금 슈팅 가능한 상태인지 확인
         if (e.keyCode == 32) {
-            console.log(pointerImgRotateDeg);
             if (userBallShootReadyFlag) {
+                //다음 볼 슈팅 비활성화
                 userBallShootReadyFlag = false;
+
+                // 현재 포인터 각도에 따라 슈팅할 볼 이동
                 var degreeNegative = 1;
                 if (pointerImgRotateDeg < 0) {
                     degreeNegative = -1;
@@ -121,6 +124,7 @@ function listenEvent() {
                 userBallArr[0].velX = 5 * degreeNegative / Math.tan(Math.PI / 180 * (90 - degreeNegative * pointerImgRotateDeg));
                 userBallArr[0].velY = -5;
 
+                // 슈팅하고 남은 아래 userBall들 한 칸씩 위로 이동
                 moveUserBallImgs();
             }
 
@@ -137,39 +141,46 @@ function moveUserBallImgs() {
 function gameLoop() {
     // console.log("gameLoop() called...");
 
-    gameBallImgsMoveCount++;
-    if (gameBallImgsMoveCount == 7000 / gameSpeed) {
-        moveGameBallImgs();
-        gameBallImgsMoveCount = 0;
-    }
+    
 
+    // 1) pointerImg 이동
     movePointerImg();
 
+    // 2) userBall, gameBall 충돌 검사 후 삭제
     for (var i = 0; i < userBallArr.length; i++) {
         checkAfterShootUserBall();
+    }
+
+    // 3) 키보드이벤트로 바뀐 velX, velY 적용하여 (+ 벽에 부딪히는 경우 처리하여) userBall 이동
+    for (var i = 0; i < userBallArr.length; i++) {
         userBallArr[i].tick();
         userBallArr[i].render();
     }
 
-    for (var i = 0; i < gameBallArr.length; i++) {
-
-        gameBallArr[i].tick();
-        gameBallArr[i].render();
+    // 4) gameBall 이동
+    gameBallImgsMoveCount++;
+    if (gameBallImgsMoveCount >= (7000 / gameSpeed)) {
+        for (var i = 0; i < gameBallArr.length; i++) {
+            gameBallArr[i].tick();
+            gameBallArr[i].render();
+        }
+        gameBallImgsMoveCount = 0;
     }
+    
 
 
     // 7000ms(7s)후에 gameLoop() 호출(재귀호출형태)
     setTimeout("gameLoop()", gameSpeed);
 }
 
-function moveGameBallImgs() {
-    // gameLoop() 돌 때마다 gameBallDiv는 공 지름크기만큼 아래로 내려옴
-    // gameBallDiv.style.top = parseInt(gameBallDiv.style.top) + ballRadius * 2 + "px";
+// function moveGameBallImgs() {
+//     // gameLoop() 돌 때마다 gameBallDiv는 공 지름크기만큼 아래로 내려옴
+//     // gameBallDiv.style.top = parseInt(gameBallDiv.style.top) + ballRadius * 2 + "px";
 
-    for (var i = 0; i < gameBallArr.length; i++) {
-        gameBallArr[i].centerY += ballRadius;
-    }
-}
+//     for (var i = 0; i < gameBallArr.length; i++) {
+//         gameBallArr[i].centerY += ballRadius;
+//     }
+// }
 
 function movePointerImg() {
     if (userBallShootReadyFlag) {

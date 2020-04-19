@@ -5,6 +5,7 @@ class GameBall extends Ball{
     }
     
     tick(){
+        this.centerY += this.radius;
     }
 
     render(){
