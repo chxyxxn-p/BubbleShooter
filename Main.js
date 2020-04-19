@@ -19,6 +19,8 @@ var pointerImgRotateDeg = 0;
 
 var userBallShootReadyFlag = true;
 
+var gameLoopVar;
+
 window.addEventListener("load", function () {
     bodyLayoutInit();
     createUserBallShooter();
@@ -146,8 +148,6 @@ function gameLoop() {
     // 1) pointerImg 이동
     movePointerImg();
 
-    console.log(gameBallArr.length);
-
     // 2) userBall, gameBall 충돌 검사 후 삭제
     for (var i = 0; i < userBallArr.length; i++) {
         checkCollisionAfterShootUserBall();
@@ -161,8 +161,7 @@ function gameLoop() {
 
     // 4) gameBall 이동
     gameBallImgsMoveCount++;
-    if (gameBallImgsMoveCount >= (7000 / gameSpeed)) {
-        console.log(gameBallArr.length);
+    if (gameBallImgsMoveCount >= (70 / gameSpeed)) {
         for (var i = 0; i < gameBallArr.length; i++) {
             // gameBallArr[i].tick();
             // 새로 gameBallArr에 추가된 userBall의 tick()은 GameBall tick()이 아니라 UserBall tick()이기때문에 움직이지 않는다
@@ -172,19 +171,15 @@ function gameLoop() {
         }
         gameBallImgsMoveCount = 0;
     }
-    
-
 
     // 7000ms(7s)후에 gameLoop() 호출(재귀호출형태)
-    setTimeout("gameLoop()", gameSpeed);
-}
+    gameLoopVar = setTimeout("gameLoop()", gameSpeed);
 
-function moveGameBallImgs(i) {
-    // gameLoop() 돌 때마다 gameBallDiv는 공 지름크기만큼 아래로 내려옴
-    // gameBallDiv.style.top = parseInt(gameBallDiv.style.top) + ballRadius * 2 + "px";
-
-    gameBallArr[i].centerY += ballRadius;
-
+    for(var i = 0 ; i < gameBallArr.length ; i++){
+        if(checkGameOver(i)){
+            break;
+        };
+    }
 }
 
 function movePointerImg() {
@@ -243,3 +238,21 @@ function checkCollisionAfterShootUserBall() {
         }
     }
 }
+
+function moveGameBallImgs(i) {
+    // gameLoop() 돌 때마다 gameBallDiv는 공 지름크기만큼 아래로 내려옴
+    // gameBallDiv.style.top = parseInt(gameBallDiv.style.top) + ballRadius * 2 + "px";
+
+    gameBallArr[i].centerY += ballRadius;
+
+}
+
+function checkGameOver(i){
+    var gameOverFlag = gameBallArr[i].centerY >= userBallArr[0].centerY - 3*ballRadius;
+    if(gameOverFlag){
+        clearTimeout(gameLoopVar);
+        console.log("game over");
+    }
+    return gameOverFlag;
+}
+
