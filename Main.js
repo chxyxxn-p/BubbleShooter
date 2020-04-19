@@ -146,6 +146,8 @@ function gameLoop() {
     // 1) pointerImg 이동
     movePointerImg();
 
+    console.log(gameBallArr.length);
+
     // 2) userBall, gameBall 충돌 검사 후 삭제
     for (var i = 0; i < userBallArr.length; i++) {
         checkCollisionAfterShootUserBall();
@@ -160,8 +162,12 @@ function gameLoop() {
     // 4) gameBall 이동
     gameBallImgsMoveCount++;
     if (gameBallImgsMoveCount >= (7000 / gameSpeed)) {
+        console.log(gameBallArr.length);
         for (var i = 0; i < gameBallArr.length; i++) {
-            gameBallArr[i].tick();
+            // gameBallArr[i].tick();
+            // 새로 gameBallArr에 추가된 userBall의 tick()은 GameBall tick()이 아니라 UserBall tick()이기때문에 움직이지 않는다
+            
+            moveGameBallImgs(i);
             gameBallArr[i].render();
         }
         gameBallImgsMoveCount = 0;
@@ -173,14 +179,13 @@ function gameLoop() {
     setTimeout("gameLoop()", gameSpeed);
 }
 
-// function moveGameBallImgs() {
-//     // gameLoop() 돌 때마다 gameBallDiv는 공 지름크기만큼 아래로 내려옴
-//     // gameBallDiv.style.top = parseInt(gameBallDiv.style.top) + ballRadius * 2 + "px";
+function moveGameBallImgs(i) {
+    // gameLoop() 돌 때마다 gameBallDiv는 공 지름크기만큼 아래로 내려옴
+    // gameBallDiv.style.top = parseInt(gameBallDiv.style.top) + ballRadius * 2 + "px";
 
-//     for (var i = 0; i < gameBallArr.length; i++) {
-//         gameBallArr[i].centerY += ballRadius;
-//     }
-// }
+    gameBallArr[i].centerY += ballRadius;
+
+}
 
 function movePointerImg() {
     if (userBallShootReadyFlag) {
