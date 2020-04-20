@@ -1,4 +1,4 @@
-function checkColorAroundRemovedBall(backgroundDiv, gameBallArr, removedBall){
+function checkColorAroundRemovedBall(backgroundDiv, gameBallArr, removeCheckGameBallArr, removedBall){
     var x = removedBall.centerX;
     var y = removedBall.centerY;
     var r = removedBall.radius;
@@ -15,12 +15,12 @@ function checkColorAroundRemovedBall(backgroundDiv, gameBallArr, removedBall){
 
             if(gameBallArr[i].colorNum == removedBall.colorNum){
 
+                removeCheckGameBallArr.push(gameBallArr[i]);
                 backgroundDiv.removeChild(gameBallArr[i].img);
                 gameBallArr.splice(i,1);
             }
-
         }
-
-        
     }
+
+    removeCheckGameBallArr.splice(0, 1);
 }

@@ -13,6 +13,7 @@ var userBallShootReadyFlag = true;
 
 var gameBallArr = new Array();
 var gameBallImgsMoveCount = 0;
+var removeCheckGameBallArr = new Array();
 
 var pointerImg;
 var pointerImgSpeed = 2;
@@ -211,10 +212,20 @@ function checkCollisionAfterShootUserBall() {
 
             // 같은 색일 경우 : userBall, gameBall 삭제 -> 삭제된 gameBall 주변 gameBall 반복 검사 후 연쇄 삭제
             if (gameBallArr[i].colorNum == userBallArr[0].colorNum) {
+                removeCheckGameBallArr.push(gameBallArr[i]);
+                
+                // 반복작업하여 연쇄삭제
+                while(true){
 
-                // 부딪힌 게임볼, 그 게임볼 주변 여섯개의 게임볼(총 7개)을 색상 검사하여 removeChild, gameBallArr에서 삭제
-                checkColorAroundRemovedBall(backgroundDiv, gameBallArr, gameBallArr[i]);
-                // 위의 함수를 반복작업하여 연쇄삭제한 뒤
+                    console.log(removeCheckGameBallArr.length);
+
+                    if(removeCheckGameBallArr.length == 0){
+                        break;
+                    }
+
+                    // 부딪힌 게임볼, 그 게임볼 주변 여섯개의 게임볼(총 7개)을 색상 검사하여 removeChild, gameBallArr에서 삭제
+                    checkColorAroundRemovedBall(backgroundDiv, gameBallArr, removeCheckGameBallArr, removeCheckGameBallArr[0]);
+                }
                 // 발사했던 userBall도 removeChild
                  backgroundDiv.removeChild(userBallArr[0].img);            
             }
