@@ -1,23 +1,21 @@
-var ballFileNameArr = ["red", "yellow", "green", "blue", "purple"];
-
-var ballRadius;
-
-var ballRow = 20;
 var gameSpeed = 30;
 
 var backgroundDiv;
 // var gameBallDiv;
-var pointerImg;
+
+var ballFileNameArr = ["red", "yellow", "green", "blue", "purple"];
+var ballRadius;
+var ballRow = 20;
+
+var userBallArr = new Array();
+var userBallShootReadyFlag = true;
 
 var gameBallArr = new Array();
-var userBallArr = new Array();
-
 var gameBallImgsMoveCount = 0;
 
+var pointerImg;
 var pointerImgSpeed = 2;
 var pointerImgRotateDeg = 0;
-
-var userBallShootReadyFlag = true;
 
 var gameLoopVar;
 
@@ -26,6 +24,7 @@ window.addEventListener("load", function () {
     createUserBallShooter();
     createGameBalls();
     listenEvent();
+
     gameLoop();
 });
 
@@ -73,12 +72,13 @@ function createUserBallShooter() {
     pointerImg.style.transformOrigin = "bottom";
     backgroundDiv.appendChild(pointerImg);
 
-    // 2) gameBallRow 수 만큼 userBall 생성
-    for (var i = 0; i < ballRow; i++) {
+    // 2) gameBallRow 수의 두배 만큼 userBall 생성
+    for (var i = 0; i < ballRow*2; i++) {
         var randomColorNum = parseInt(Math.random() * 5);
+
         var gbTemp = new UserBall(
-            randomColorNum,
-            "./images/ball_" + ballFileNameArr[randomColorNum] + ".png",
+            randomColorNum,     //colorNum
+            "./images/ball_" + ballFileNameArr[randomColorNum] + ".png",    //src
             backgroundDiv,  //container
             parseInt(backgroundDiv.style.width) / 2,    //centerX / backgroundDiv 중앙에 위치
             parseInt(backgroundDiv.style.height) - ballRadius * 3 + i * 2 * ballRadius,    //centerY / backgroundDiv와 공 1개만큼의 거리를 두고 첫번째 공 아래로 연달아 위치
@@ -94,16 +94,17 @@ function createGameBalls() {
     // 11개의 gameBall 만들고 남는 화면 여분 공간 2등분(각 줄 시작 위치 조절)
     var gap = (parseInt(backgroundDiv.style.width) - ballRadius * 2 * 11) / 2;
 
-    // gameBallArr에 2차원으로 GameBall 객체 생성
+    // gameBallArr에 1차원으로 GameBall 객체 생성
     for (var i = 0; i < ballRow; i++) {
         for (var j = 0; j < (i % 2 == 0 ? 11 : 10); j++) {
             var randomColorNum = parseInt(Math.random() * 5);
             var gbTemp = new GameBall(
                 randomColorNum,
                 "./images/ball_" + ballFileNameArr[randomColorNum] + ".png",
-                backgroundDiv,  //container / 각 GameBall img는 gameBallDiv에 부착(gameBallDiv는 backgroundDiv에 부착되어있음) -> backgroundDiv
+                backgroundDiv,  //container / backgroundDiv
                 gap + (2 * j + 1 + i % 2) * ballRadius,    //centerX / gap + 1*r : 기본적으로 띄워질 부분, 2*j*r : 몇번째 공인지에 따라 간격 넓어짐, i%2*r : 한줄씩 번갈아가면서 갯수가 달라짐 
-                -(screen.height - ballRadius * 10) + (ballRadius + i * (5 / 3 * ballRadius)),    //centerY / r : 기본적으로 띄워질 부분, i* : 몇번째 공인지, (2*r - 8) : 엇갈려있는 공 밀착시키기 위해 지름보다 조금 작게 centerY값 위치시킴
+                -screen.height + ballRadius*10 + (ballRadius + i * (5 / 3 * ballRadius)),   
+                        //centerY / screen.height만큼 화면 위로(-방향으로) 이동, ballRadius*10만큼만 아래로(+방향으로) 이동 [여기까지 기본 위치], r : centerY값은 기본 위치에서 반지름만큼 떨어져있음, i*(5/3)*r : 몇번째 공인지에 따라 간격 넓어짐
                 ballRadius);    //radius
             gameBallArr.push(gbTemp);
         }
@@ -118,7 +119,7 @@ function listenEvent() {
                 //다음 볼 슈팅 비활성화
                 userBallShootReadyFlag = false;
 
-                // 현재 포인터 각도에 따라 슈팅할 볼 이동
+                // 현재 포인터 각도에 따라 슈팅할 볼 velX, velY 값 설정
                 var degreeNegative = 1;
                 if (pointerImgRotateDeg < 0) {
                     degreeNegative = -1;
@@ -143,8 +144,6 @@ function moveUserBallImgs() {
 function gameLoop() {
     // console.log("gameLoop() called...");
 
-    
-
     // 1) pointerImg 이동
     movePointerImg();
 
@@ -161,7 +160,7 @@ function gameLoop() {
 
     // 4) gameBall 이동
     gameBallImgsMoveCount++;
-    if (gameBallImgsMoveCount >= (70 / gameSpeed)) {
+    if (gameBallImgsMoveCount >= (7000 / gameSpeed)) {
         for (var i = 0; i < gameBallArr.length; i++) {
             // gameBallArr[i].tick();
             // 새로 gameBallArr에 추가된 userBall의 tick()은 GameBall tick()이 아니라 UserBall tick()이기때문에 움직이지 않는다
@@ -248,7 +247,7 @@ function moveGameBallImgs(i) {
 }
 
 function checkGameOver(i){
-    var gameOverFlag = gameBallArr[i].centerY >= userBallArr[0].centerY - 3*ballRadius;
+    var gameOverFlag = gameBallArr[i].centerY >= parseInt(backgroundDiv.style.height) - ballRadius * 6;
     if(gameOverFlag){
         clearTimeout(gameLoopVar);
         console.log("game over");
