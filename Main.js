@@ -1,7 +1,8 @@
 var gameSpeed = 30;
+var gameScore = 0;
 
 var backgroundDiv;
-// var gameBallDiv;
+var scoreDiv;
 
 var ballFileNameArr = ["red", "yellow", "green", "blue", "purple"]; //index : 5 -> ball 생성 X
 var ballRadius;
@@ -57,10 +58,26 @@ function bodyLayoutInit() {
     document.body.style.margin = 0 + "px";
     document.body.style.position = "relative";
 
+    // scoreDiv create, style
+    scoreDiv = document.createElement("div");
+    scoreDiv.style.width = parseInt(screen.height*0.95 / 1.7) + "px";
+    scoreDiv.style.height = screen.height*0.05 + "px";
+    scoreDiv.style.position = "relative";
+    // backgroundDiv.style.left = 0 + "px";
+    // backgroundDiv.style.top = 0 + "px";
+    scoreDiv.style.margin = "auto";
+    // scoreDiv.style.overflow = "hidden";
+    // scoreDiv.style.backgroundImage = "url('./images/background_temp.png')";
+    scoreDiv.style.fontSize = screen.height*0.025 + "pt";
+    scoreDiv.style.fontWeight = "bold";
+    scoreDiv.style.textAlign = "left";
+    scoreDiv.innerHTML = "SCORE : " + gameScore;
+    document.body.appendChild(scoreDiv);
+
     // backgroundDiv create, style
     backgroundDiv = document.createElement("div");
-    backgroundDiv.style.width = parseInt(screen.height / 1.7) + "px";
-    backgroundDiv.style.height = screen.height + "px";
+    backgroundDiv.style.width = parseInt(screen.height*0.95 / 1.7) + "px";
+    backgroundDiv.style.height = screen.height*0.95 + "px";
     backgroundDiv.style.position = "relative";
     // backgroundDiv.style.left = 0 + "px";
     // backgroundDiv.style.top = 0 + "px";
@@ -69,7 +86,7 @@ function bodyLayoutInit() {
     backgroundDiv.style.backgroundImage = "url('./images/background_temp.png')";
     document.body.appendChild(backgroundDiv);
 
-    // ballRadius value set (backgroundDiv width값이 정해진 후 비율에 맞도록)
+  // ballRadius value set (backgroundDiv width값이 정해진 후 비율에 맞도록)
     ballRadius = parseInt(parseInt(backgroundDiv.style.width) / 11) / 2;
 
     // // gameBallDiv create, style
@@ -121,8 +138,8 @@ function createGameBalls() {
     // gameBallArr에 1차원으로 GameBall 객체 생성
     for (var i = 0; i < gameBallRow; i++) {
         for (var j = 0; j < (i % 2 == 0 ? 11 : 10); j++) {
-            // var randomColorNum = parseInt(Math.random() * ballFileNameArr.length);
-            var randomColorNum = gameBallColorMapArr[i][j];
+            var randomColorNum = parseInt(Math.random() * ballFileNameArr.length);
+            // var randomColorNum = gameBallColorMapArr[i][j];
             if (randomColorNum != 5) {
                 var gbTemp = new GameBall(
                     randomColorNum,
@@ -248,7 +265,8 @@ function checkCollisionAfterShootUserBall() {
                     }
 
                     // 부딪힌 게임볼, 그 게임볼 주변 여섯개의 게임볼(총 7개)을 색상 검사하여 removeChild, gameBallArr에서 삭제
-                    checkColorAroundRemovedBall(backgroundDiv, gameBallArr, removeCheckGameBallArr, removeCheckGameBallArr[0]);
+                    gameScore += checkColorAroundRemovedBall(backgroundDiv, gameBallArr, removeCheckGameBallArr, removeCheckGameBallArr[0]);
+                    scoreDiv.innerHTML = "SCORE : " + gameScore;
                 }
                 // 발사했던 userBall도 removeChild
                 backgroundDiv.removeChild(userBallArr[0].img);
