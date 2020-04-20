@@ -3,7 +3,7 @@ var gameSpeed = 30;
 var backgroundDiv;
 // var gameBallDiv;
 
-var ballFileNameArr = ["red", "yellow", "green", "blue", "purple"];
+var ballFileNameArr = ["red", "yellow"]//, "green", "blue", "purple"];
 var ballRadius;
 var gameBallRow = 20;
 var ballSpeed = screen.width/100;
@@ -75,7 +75,7 @@ function createUserBallShooter() {
 
     // 2) gamegameBallRow 수의 두배 만큼 userBall 생성
     for (var i = 0; i < gameBallRow*2; i++) {
-        var randomColorNum = parseInt(Math.random() * 5);
+        var randomColorNum = parseInt(Math.random() * ballFileNameArr.length);
 
         var gbTemp = new UserBall(
             randomColorNum,     //colorNum
@@ -98,7 +98,7 @@ function createGameBalls() {
     // gameBallArr에 1차원으로 GameBall 객체 생성
     for (var i = 0; i < gameBallRow; i++) {
         for (var j = 0; j < (i % 2 == 0 ? 11 : 10); j++) {
-            var randomColorNum = parseInt(Math.random() * 5);
+            var randomColorNum = parseInt(Math.random() * ballFileNameArr.length);
 
             var gbTemp = new GameBall(
                 randomColorNum,
@@ -212,12 +212,11 @@ function checkCollisionAfterShootUserBall() {
             // 같은 색일 경우 : userBall, gameBall 삭제 -> 삭제된 gameBall 주변 gameBall 반복 검사 후 연쇄 삭제
             if (gameBallArr[i].colorNum == userBallArr[0].colorNum) {
 
-                // removeChild
-                backgroundDiv.removeChild(gameBallArr[i].img);
-                backgroundDiv.removeChild(userBallArr[0].img);
-
-                // gameBallArr에서 삭제
-                gameBallArr.splice(i, 1);
+                // 부딪힌 게임볼, 그 게임볼 주변 여섯개의 게임볼(총 7개)을 색상 검사하여 removeChild, gameBallArr에서 삭제
+                checkColorAroundRemovedBall(backgroundDiv, gameBallArr, gameBallArr[i]);
+                // 위의 함수를 반복작업하여 연쇄삭제한 뒤
+                // 발사했던 userBall도 removeChild
+                 backgroundDiv.removeChild(userBallArr[0].img);            
             }
 
             // 다른 색일 경우
