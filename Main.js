@@ -5,7 +5,8 @@ var backgroundDiv;
 
 var ballFileNameArr = ["red", "yellow", "green", "blue", "purple"];
 var ballRadius;
-var ballRow = 20;
+var gameBallRow = 20;
+var ballSpeed = screen.width/100;
 
 var userBallArr = new Array();
 var userBallShootReadyFlag = true;
@@ -54,7 +55,7 @@ function bodyLayoutInit() {
     // // gameBallDiv.style.height = ballRadius*2 *30 + "px";
     // gameBallDiv.style.position = "absolute";
     // gameBallDiv.style.left = backgroundDiv.style.left;
-    // gameBallDiv.style.top = (-1) * (2 * ballRadius - 8) * (ballRow - 3) + "px";
+    // gameBallDiv.style.top = (-1) * (2 * ballRadius - 8) * (gameBallRow - 3) + "px";
     // // gameBallDiv.style.margin = "auto";
     // // gameBallDiv.style.overflow = "hidden";
     // backgroundDiv.appendChild(gameBallDiv);
@@ -72,8 +73,8 @@ function createUserBallShooter() {
     pointerImg.style.transformOrigin = "bottom";
     backgroundDiv.appendChild(pointerImg);
 
-    // 2) gameBallRow 수의 두배 만큼 userBall 생성
-    for (var i = 0; i < ballRow*2; i++) {
+    // 2) gamegameBallRow 수의 두배 만큼 userBall 생성
+    for (var i = 0; i < gameBallRow*2; i++) {
         var randomColorNum = parseInt(Math.random() * 5);
 
         var gbTemp = new UserBall(
@@ -95,9 +96,10 @@ function createGameBalls() {
     var gap = (parseInt(backgroundDiv.style.width) - ballRadius * 2 * 11) / 2;
 
     // gameBallArr에 1차원으로 GameBall 객체 생성
-    for (var i = 0; i < ballRow; i++) {
+    for (var i = 0; i < gameBallRow; i++) {
         for (var j = 0; j < (i % 2 == 0 ? 11 : 10); j++) {
             var randomColorNum = parseInt(Math.random() * 5);
+
             var gbTemp = new GameBall(
                 randomColorNum,
                 "./images/ball_" + ballFileNameArr[randomColorNum] + ".png",
@@ -106,6 +108,7 @@ function createGameBalls() {
                 -screen.height + ballRadius*10 + (ballRadius + i * (5 / 3 * ballRadius)),   
                         //centerY / screen.height만큼 화면 위로(-방향으로) 이동, ballRadius*10만큼만 아래로(+방향으로) 이동 [여기까지 기본 위치], r : centerY값은 기본 위치에서 반지름만큼 떨어져있음, i*(5/3)*r : 몇번째 공인지에 따라 간격 넓어짐
                 ballRadius);    //radius
+               
             gameBallArr.push(gbTemp);
         }
     }
@@ -124,8 +127,8 @@ function listenEvent() {
                 if (pointerImgRotateDeg < 0) {
                     degreeNegative = -1;
                 }
-                userBallArr[0].velX = 5 * degreeNegative / Math.tan(Math.PI / 180 * (90 - degreeNegative * pointerImgRotateDeg));
-                userBallArr[0].velY = -5;
+                userBallArr[0].velX = ballSpeed * degreeNegative / Math.tan(Math.PI / 180 * (90 - degreeNegative * pointerImgRotateDeg));
+                userBallArr[0].velY = -ballSpeed;
 
                 // 슈팅하고 남은 아래 userBall들 한 칸씩 위로 이동
                 moveUserBallImgs();
@@ -147,19 +150,22 @@ function gameLoop() {
     // 1) pointerImg 이동
     movePointerImg();
 
-    // 2) userBall, gameBall 충돌 검사 후 삭제
-    for (var i = 0; i < userBallArr.length; i++) {
-        checkCollisionAfterShootUserBall();
-    }
-
-    // 3) 키보드이벤트로 바뀐 velX, velY 적용하여 (+ 벽에 부딪히는 경우 처리하여) userBall 이동
+    // 2) 키보드이벤트로 바뀐 velX, velY 적용하여 (+ 벽에 부딪히는 경우 처리하여) userBall 이동
     for (var i = 0; i < userBallArr.length; i++) {
         userBallArr[i].tick();
         userBallArr[i].render();
     }
 
+    // 3) userBall, gameBall 충돌 검사 후 삭제
+    checkCollisionAfterShootUserBall();
+    
+
     // 4) gameBall 이동
-    gameBallImgsMoveCount++;
+    if(userBallShootReadyFlag){
+        // userBall 이동 중(readyFlag가 false일 때) gameBallImg들이 움직이면 충돌 오류 -> 그래도 오류 有
+        gameBallImgsMoveCount++;
+
+    }
     if (gameBallImgsMoveCount >= (7000 / gameSpeed)) {
         for (var i = 0; i < gameBallArr.length; i++) {
             // gameBallArr[i].tick();
@@ -195,10 +201,13 @@ function movePointerImg() {
 }
 
 function checkCollisionAfterShootUserBall() {
-    for (var i = 0; i < gameBallArr.length; i++) {
+    // 공의 좌상단부터 gameBall이 push된 배열이기때문에 userBall이 가장 먼저 만날 수 있는 gameBall은 아랫줄(배열의 뒷 번호 인덱스)부터 -> 반복문 내림차순
+    for (var i = gameBallArr.length-1 ; i >= 0 ; i--) {
         // shooting된 userBall은 항상 0번째(발사 후 userBallArr에서 splice하기 때문에)
         // 충돌했을 경우
         if (ballCollisionCheck(gameBallArr[i], userBallArr[0])) {
+
+            console.log("collision! " + gameBallArr[i].colorNum + "," + userBallArr[0].colorNum);
 
             // 같은 색일 경우 : userBall, gameBall 삭제 -> 삭제된 gameBall 주변 gameBall 반복 검사 후 연쇄 삭제
             if (gameBallArr[i].colorNum == userBallArr[0].colorNum) {
@@ -214,16 +223,18 @@ function checkCollisionAfterShootUserBall() {
             // 다른 색일 경우
             else {
                 // 발사된 userBall 멈추기
+               userBallArr[0].centerY = gameBallArr[i].centerY +(5/3 * ballRadius);
+
+                if(userBallArr[0].centerX < gameBallArr[i].centerX){
+                    userBallArr[0].centerX = gameBallArr[i].centerX - ballRadius;
+                } else{
+                    userBallArr[0].centerX = gameBallArr[i].centerX + ballRadius;
+                }
+
+                userBallArr[0].render();
+
                 userBallArr[0].velX = 0;
                 userBallArr[0].velY = 0;
-
-                // while(true){
-                //     if(userBallArr[n].centerY - gameBallArr[i].centerY >= 5/3 * ballRadius){
-                //         break;
-                //     }
-
-                //     userBallArr[n].centerY  += 0.01;
-                // }
 
                 // userBallArr -> gameBallArr에 새로 추가
                 gameBallArr.push(userBallArr[0]);
