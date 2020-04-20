@@ -15,8 +15,14 @@ class UserBall extends Ball {
             this.velX *= (-1);
         }
 
-        if (this.centerY + this.radius > parseInt(this.container.style.height)
-            || this.centerY - this.radius < 0) {
+        if (this.centerY - this.radius < - this.radius * 3) {
+            this.container.removeChild(this.img);
+            userBallArr.splice(0, 1);
+            userBallShootReadyFlag = true;
+            console.log("userBall delete");
+        }
+
+        if (this.centerY + this.radius > parseInt(this.container.style.height)){
             this.velY *= (-1);
         }
 }
