@@ -7,7 +7,7 @@ var scoreDiv;
 var ballFileNameArr = ["red", "yellow", "green", "blue", "purple"]; //index : 5 -> ball 생성 X
 var ballRadius;
 var gameBallRow = 20;
-var ballSpeed = screen.width / 100;
+var ballSpeed = screen.width / 75;
 
 var userBallArr = new Array();
 var userBallShootReadyFlag = true;
@@ -76,7 +76,7 @@ function bodyLayoutInit() {
 
     // backgroundDiv create, style
     backgroundDiv = document.createElement("div");
-    backgroundDiv.style.width = parseInt(screen.height*0.95 / 1.7) + "px";
+    backgroundDiv.style.width = parseInt(screen.height*0.95 / 1.7) + "px"; 
     backgroundDiv.style.height = screen.height*0.95 + "px";
     backgroundDiv.style.position = "relative";
     // backgroundDiv.style.left = 0 + "px";
@@ -157,9 +157,8 @@ function createGameBalls() {
 }
 
 function listenEvent() {
-    window.addEventListener("keydown", function (e) {
+    window.addEventListener("click", function (e) {
         // spacebar 누르면 지금 슈팅 가능한 상태인지 확인
-        if (e.keyCode == 32) {
             if (userBallShootReadyFlag) {
                 //다음 볼 슈팅 비활성화
                 userBallShootReadyFlag = false;
@@ -175,8 +174,6 @@ function listenEvent() {
                 // 슈팅하고 남은 아래 userBall들 한 칸씩 위로 이동
                 moveUserBallImgs();
             }
-
-        }
     });
 }
 
