@@ -17,25 +17,25 @@ var gameBallImgsMoveCount = 0;
 var removeCheckGameBallArr = new Array();
 var gameBallColorMapArr = [
     [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
-      [5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
+    [5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
     [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
-      [5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
+    [5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
     [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
-      [1, 5, 5, 5, 5, 5, 5, 5, 5, 1],
+    [1, 5, 5, 5, 5, 5, 5, 5, 5, 1],
     [5, 1, 5, 5, 5, 5, 5, 5, 5, 1, 5],
-      [5, 1, 5, 2, 3, 2, 5, 5, 1, 5],
+    [5, 1, 5, 2, 3, 2, 5, 5, 1, 5],
     [5, 5, 1, 5, 5, 5, 5, 5, 1, 5, 5],
-      [5, 5, 1, 5, 5, 5, 5, 1, 5, 5],
+    [5, 5, 1, 5, 5, 5, 5, 1, 5, 5],
     [5, 5, 5, 1, 5, 5, 5, 1, 5, 5, 5],
-      [5, 5, 5, 1, 5, 5, 1, 5, 5, 5],
+    [5, 5, 5, 1, 5, 5, 1, 5, 5, 5],
     [5, 5, 5, 5, 1, 5, 1, 5, 5, 5, 5],
-      [5, 5, 5, 5, 1, 1, 5, 5, 5, 5],
+    [5, 5, 5, 5, 1, 1, 5, 5, 5, 5],
     [5, 5, 5, 5, 5, 1, 5, 5, 5, 5, 5],
-      [5, 5, 5, 5, 3, 3, 5, 5, 5, 5],
+    [5, 5, 5, 5, 3, 3, 5, 5, 5, 5],
     [5, 5, 5, 5, 3, 4, 3, 5, 5, 5, 5],
-      [5, 5, 5, 5, 3, 3, 5, 5, 5, 5],
+    [5, 5, 5, 5, 3, 3, 5, 5, 5, 5],
     [5, 5, 2, 2, 5, 5, 5, 2, 2, 5, 5],
-      [5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
+    [5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
 ];
 
 var pointerImg;
@@ -60,15 +60,15 @@ function bodyLayoutInit() {
 
     // scoreDiv create, style
     scoreDiv = document.createElement("div");
-    scoreDiv.style.width = parseInt(screen.height*0.95 / 1.7) + "px";
-    scoreDiv.style.height = screen.height*0.05 + "px";
+    scoreDiv.style.width = parseInt(screen.height * 0.95 / 1.7) + "px";
+    scoreDiv.style.height = screen.height * 0.05 + "px";
     scoreDiv.style.position = "relative";
     // backgroundDiv.style.left = 0 + "px";
     // backgroundDiv.style.top = 0 + "px";
     scoreDiv.style.margin = "auto";
     // scoreDiv.style.overflow = "hidden";
     // scoreDiv.style.backgroundImage = "url('./images/background_temp.png')";
-    scoreDiv.style.fontSize = screen.height*0.025 + "pt";
+    scoreDiv.style.fontSize = screen.height * 0.025 + "pt";
     scoreDiv.style.fontWeight = "bold";
     scoreDiv.style.textAlign = "left";
     scoreDiv.innerHTML = "SCORE : " + gameScore;
@@ -76,8 +76,8 @@ function bodyLayoutInit() {
 
     // backgroundDiv create, style
     backgroundDiv = document.createElement("div");
-    backgroundDiv.style.width = parseInt(screen.height*0.95 / 1.7) + "px"; 
-    backgroundDiv.style.height = screen.height*0.95 + "px";
+    backgroundDiv.style.width = parseInt(screen.height * 0.95 / 1.7) + "px";
+    backgroundDiv.style.height = screen.height * 0.95 + "px";
     backgroundDiv.style.position = "relative";
     // backgroundDiv.style.left = 0 + "px";
     // backgroundDiv.style.top = 0 + "px";
@@ -86,7 +86,7 @@ function bodyLayoutInit() {
     backgroundDiv.style.backgroundImage = "url('./images/background_temp.png')";
     document.body.appendChild(backgroundDiv);
 
-  // ballRadius value set (backgroundDiv width값이 정해진 후 비율에 맞도록)
+    // ballRadius value set (backgroundDiv width값이 정해진 후 비율에 맞도록)
     ballRadius = parseInt(parseInt(backgroundDiv.style.width) / 11) / 2;
 
     // // gameBallDiv create, style
@@ -159,21 +159,21 @@ function createGameBalls() {
 function listenEvent() {
     window.addEventListener("click", function (e) {
         // spacebar 누르면 지금 슈팅 가능한 상태인지 확인
-            if (userBallShootReadyFlag) {
-                //다음 볼 슈팅 비활성화
-                userBallShootReadyFlag = false;
+        if (userBallShootReadyFlag) {
+            //다음 볼 슈팅 비활성화
+            userBallShootReadyFlag = false;
 
-                // 현재 포인터 각도에 따라 슈팅할 볼 velX, velY 값 설정
-                var degreeNegative = 1;
-                if (pointerImgRotateDeg < 0) {
-                    degreeNegative = -1;
-                }
-                userBallArr[0].velX = ballSpeed * degreeNegative / Math.tan(Math.PI / 180 * (90 - degreeNegative * pointerImgRotateDeg));
-                userBallArr[0].velY = -ballSpeed;
-
-                // 슈팅하고 남은 아래 userBall들 한 칸씩 위로 이동
-                moveUserBallImgs();
+            // 현재 포인터 각도에 따라 슈팅할 볼 velX, velY 값 설정
+            var degreeNegative = 1;
+            if (pointerImgRotateDeg < 0) {
+                degreeNegative = -1;
             }
+            userBallArr[0].velX = ballSpeed * degreeNegative / Math.tan(Math.PI / 180 * (90 - degreeNegative * pointerImgRotateDeg));
+            userBallArr[0].velY = -ballSpeed;
+
+            // 슈팅하고 남은 아래 userBall들 한 칸씩 위로 이동
+            moveUserBallImgs();
+        }
     });
 }
 
@@ -272,13 +272,14 @@ function checkCollisionAfterShootUserBall() {
             // 다른 색일 경우
             else {
                 // 발사된 userBall 멈추기
-                userBallArr[0].centerY = gameBallArr[i].centerY + (5 / 3 * ballRadius);
+                // userBallArr[0].centerY = gameBallArr[i].centerY + (5 / 3 * ballRadius);
+                // if (userBallArr[0].centerX < gameBallArr[i].centerX) {
+                //     userBallArr[0].centerX = gameBallArr[i].centerX - ballRadius;
+                // } else {
+                //     userBallArr[0].centerX = gameBallArr[i].centerX + ballRadius;
+                // }
 
-                if (userBallArr[0].centerX < gameBallArr[i].centerX) {
-                    userBallArr[0].centerX = gameBallArr[i].centerX - ballRadius;
-                } else {
-                    userBallArr[0].centerX = gameBallArr[i].centerX + ballRadius;
-                }
+                setShootedBallCenterValue(gameBallArr[i], userBallArr[0]);
 
                 userBallArr[0].render();
 
@@ -296,6 +297,28 @@ function checkCollisionAfterShootUserBall() {
             break;
         }
     }
+}
+
+function setShootedBallCenterValue(gb, ub) {
+    var ux = ub.centerX;
+    var uy = ub.centerY;
+    var gx = gb.centerX;
+    var gy = gb.centerY;
+
+    if (ux < gx) {
+        userBallArr[0].centerX = gx - ballRadius;
+    } else {
+        userBallArr[0].centerX = gx + ballRadius;
+    }
+
+    if (uy < gy - 5/3*ballRadius) {
+        userBallArr[0].centerY = gy - 5/3*ballRadius;
+    } else if (uy < gy + 5/3*ballRadius) {
+        userBallArr[0].centerY = gy;
+    } else {
+        userBallArr[0].centerY = gy + 5/3*ballRadius;
+    }
+
 }
 
 function moveGameBallImgs(i) {
