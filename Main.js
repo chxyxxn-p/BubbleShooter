@@ -222,8 +222,10 @@ function gameLoop() {
     for (var i = 0; i < gameBallArr.length; i++) {
         if (checkGameOver(i)) {
             break;
-        };
+        }
     }
+
+    checkGameClear();
 }
 
 function movePointerImg() {
@@ -272,14 +274,15 @@ function checkCollisionAfterShootUserBall() {
             // 다른 색일 경우
             else {
                 // 발사된 userBall 멈추기
-                // userBallArr[0].centerY = gameBallArr[i].centerY + (5 / 3 * ballRadius);
-                // if (userBallArr[0].centerX < gameBallArr[i].centerX) {
-                //     userBallArr[0].centerX = gameBallArr[i].centerX - ballRadius;
-                // } else {
-                //     userBallArr[0].centerX = gameBallArr[i].centerX + ballRadius;
-                // }
+                userBallArr[0].centerY = gameBallArr[i].centerY + (5 / 3 * ballRadius);
 
-                setShootedBallCenterValue(gameBallArr[i], userBallArr[0]);
+                if (userBallArr[0].centerX < gameBallArr[i].centerX) {
+                    userBallArr[0].centerX = gameBallArr[i].centerX - ballRadius;
+                } else {
+                    userBallArr[0].centerX = gameBallArr[i].centerX + ballRadius;
+                }
+
+                // setShootedBallCenterValue(gameBallArr[i], userBallArr[0]);
 
                 userBallArr[0].render();
 
@@ -299,27 +302,27 @@ function checkCollisionAfterShootUserBall() {
     }
 }
 
-function setShootedBallCenterValue(gb, ub) {
-    var ux = ub.centerX;
-    var uy = ub.centerY;
-    var gx = gb.centerX;
-    var gy = gb.centerY;
+// function setShootedBallCenterValue(gb, ub) {
+//     var ux = ub.centerX;
+//     var uy = ub.centerY;
+//     var gx = gb.centerX;
+//     var gy = gb.centerY;
 
-    if (ux < gx) {
-        userBallArr[0].centerX = gx - ballRadius;
-    } else {
-        userBallArr[0].centerX = gx + ballRadius;
-    }
+//     if (ux < gx) {
+//         userBallArr[0].centerX = gx - ballRadius;
+//     } else {
+//         userBallArr[0].centerX = gx + ballRadius;
+//     }
 
-    if (uy < gy - 5/3*ballRadius) {
-        userBallArr[0].centerY = gy - 5/3*ballRadius;
-    } else if (uy < gy + 5/3*ballRadius) {
-        userBallArr[0].centerY = gy;
-    } else {
-        userBallArr[0].centerY = gy + 5/3*ballRadius;
-    }
+//     if (uy < gy - 5/3*ballRadius) {
+//         userBallArr[0].centerY = gy - 5/3*ballRadius;
+//     } else if (uy < gy + 5/3*ballRadius) {
+//         userBallArr[0].centerY = gy;
+//     } else {
+//         userBallArr[0].centerY = gy + 5/3*ballRadius;
+//     }
 
-}
+// }
 
 function moveGameBallImgs(i) {
     // gameLoop() 돌 때마다 gameBallDiv는 공 지름크기만큼 아래로 내려옴
@@ -334,7 +337,36 @@ function checkGameOver(i) {
     if (gameOverFlag) {
         clearTimeout(gameLoopVar);
         console.log("game over");
+        createGameOverOrClearImg(0);
     }
-    return gameOverFlag;
+}
+
+function checkGameClear(){
+    if (gameScore >= 50) {
+        clearTimeout(gameLoopVar);
+        console.log("game clear");
+        createGameOverOrClearImg(1);
+    }
+}
+
+function createGameOverOrClearImg(n){
+    var background = document.createElement("img");
+     // n == 0 : gameOver , n == 1 : gameClear
+    background.src = "./images/gameClearBackground.png";
+    background.style.width = parseInt(backgroundDiv.style.width)+ "px";
+    background.style.height = parseInt(backgroundDiv.style.height) + "px";
+    background.style.position = "absolute";
+    background.style.left = background.style.top = 0 + "px";
+    backgroundDiv.appendChild(background);
+
+    var img = document.createElement("img");
+                                       // n == 0 : gameOver , n == 1 : gameClear
+    img.src = (n == 0) ? "./images/ball_red.png" : "./images/ball_blue.png";
+    img.style.width = parseInt(backgroundDiv.style.width) / 4 + "px";
+    img.style.height = parseInt(backgroundDiv.style.width) / 4 + "px";
+    img.style.position = "absolute";
+    img.style.left = parseInt(backgroundDiv.style.width) / 2 - parseInt(img.style.width) / 2 + "px";
+    img.style.top = parseInt(backgroundDiv.style.height) / 2 - parseInt(img.style.height) / 2 + "px";
+    backgroundDiv.appendChild(img);
 }
 
