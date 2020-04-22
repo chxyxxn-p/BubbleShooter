@@ -37,6 +37,7 @@ var gameBallColorMapArr = [
     [5, 5, 2, 2, 5, 5, 5, 2, 2, 5, 5],
     [5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
 ];
+var gameBallMoveSpeed = 1000;
 
 var pointerImg;
 var pointerImgSpeed = 2;
@@ -63,11 +64,7 @@ function bodyLayoutInit() {
     scoreDiv.style.width = parseInt(screen.height * 0.95 / 1.7) + "px";
     scoreDiv.style.height = screen.height * 0.05 + "px";
     scoreDiv.style.position = "relative";
-    // backgroundDiv.style.left = 0 + "px";
-    // backgroundDiv.style.top = 0 + "px";
     scoreDiv.style.margin = "auto";
-    // scoreDiv.style.overflow = "hidden";
-    // scoreDiv.style.backgroundImage = "url('./images/background_temp.png')";
     scoreDiv.style.fontSize = screen.height * 0.025 + "pt";
     scoreDiv.style.fontWeight = "bold";
     scoreDiv.style.textAlign = "left";
@@ -79,8 +76,6 @@ function bodyLayoutInit() {
     backgroundDiv.style.width = parseInt(screen.height * 0.95 / 1.7) + "px";
     backgroundDiv.style.height = screen.height * 0.95 + "px";
     backgroundDiv.style.position = "relative";
-    // backgroundDiv.style.left = 0 + "px";
-    // backgroundDiv.style.top = 0 + "px";
     backgroundDiv.style.margin = "auto";
     backgroundDiv.style.overflow = "hidden";
     backgroundDiv.style.backgroundImage = "url('./images/background_temp.png')";
@@ -88,17 +83,6 @@ function bodyLayoutInit() {
 
     // ballRadius value set (backgroundDiv width값이 정해진 후 비율에 맞도록)
     ballRadius = parseInt(parseInt(backgroundDiv.style.width) / 11) / 2;
-
-    // // gameBallDiv create, style
-    // gameBallDiv = document.createElement("div");
-    // gameBallDiv.style.width = parseInt(backgroundDiv.style.width) + "px";
-    // // gameBallDiv.style.height = ballRadius*2 *30 + "px";
-    // gameBallDiv.style.position = "absolute";
-    // gameBallDiv.style.left = backgroundDiv.style.left;
-    // gameBallDiv.style.top = (-1) * (2 * ballRadius - 8) * (gameBallRow - 3) + "px";
-    // // gameBallDiv.style.margin = "auto";
-    // // gameBallDiv.style.overflow = "hidden";
-    // backgroundDiv.appendChild(gameBallDiv);
 }
 
 function createUserBallShooter() {
@@ -200,12 +184,12 @@ function gameLoop() {
 
 
     // 4) gameBall 이동
-    if (userBallShootReadyFlag) {
-        // userBall 이동 중(readyFlag가 false일 때) gameBallImg들이 움직이면 충돌 오류 -> 그래도 오류 有
-        gameBallImgsMoveCount++;
 
-    }
-    if (gameBallImgsMoveCount >= (7000 / gameSpeed)) {
+    // if (userBallShootReadyFlag) {
+    //     // userBall 이동 중(readyFlag가 false일 때) gameBallImg들이 움직이면 충돌 오류 -> 그래도 오류 有
+        gameBallImgsMoveCount++;
+    // }
+    if (gameBallImgsMoveCount >= (gameBallMoveSpeed / gameSpeed)) {
         for (var i = 0; i < gameBallArr.length; i++) {
             // gameBallArr[i].tick();
             // 새로 gameBallArr에 추가된 userBall의 tick()은 GameBall tick()이 아니라 UserBall tick()이기때문에 움직이지 않는다
@@ -342,7 +326,7 @@ function checkGameOver(i) {
 }
 
 function checkGameClear(){
-    if (gameScore >= 50) {
+    if (gameScore >= 100) {
         clearTimeout(gameLoopVar);
         console.log("game clear");
         createGameOverOrClearImg(1);
