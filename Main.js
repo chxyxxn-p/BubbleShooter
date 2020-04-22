@@ -1,5 +1,6 @@
 var gameSpeed = 30;
 var gameScore = 0;
+var gameClearScore = 50;
 
 var backgroundDiv;
 var scoreDiv;
@@ -78,7 +79,7 @@ function bodyLayoutInit() {
     backgroundDiv.style.position = "relative";
     backgroundDiv.style.margin = "auto";
     backgroundDiv.style.overflow = "hidden";
-    backgroundDiv.style.backgroundImage = "url('./images/background_temp.png')";
+    backgroundDiv.style.backgroundImage = "url('./images/Anticipation_cc_cut.svg')";
     document.body.appendChild(backgroundDiv);
 
     // ballRadius value set (backgroundDiv width값이 정해진 후 비율에 맞도록)
@@ -323,10 +324,11 @@ function checkGameOver(i) {
         console.log("game over");
         createGameOverOrClearImg(0);
     }
+    return gameOverFlag;
 }
 
 function checkGameClear(){
-    if (gameScore >= 100) {
+    if (gameScore >= gameClearScore) {
         clearTimeout(gameLoopVar);
         console.log("game clear");
         createGameOverOrClearImg(1);
