@@ -350,9 +350,9 @@ function createGameOverOrClearImg(n){
 
     var img = document.createElement("img");
                                        // n == 0 : gameOver , n == 1 : gameClear
-    img.src = (n == 0) ? "./images/ball_red.png" : "./images/ball_blue.png";
-    img.style.width = parseInt(backgroundDiv.style.width) / 4 + "px";
-    img.style.height = parseInt(backgroundDiv.style.width) / 4 + "px";
+    img.src = (n == 0) ? "./images/gameOver.png" : "./images/gameClear.png";
+    img.style.width = parseInt(backgroundDiv.style.width) / 2 + "px";
+    img.style.height = parseInt(backgroundDiv.style.width) / 2 + "px";
     img.style.position = "absolute";
     img.style.left = parseInt(backgroundDiv.style.width) / 2 - parseInt(img.style.width) / 2 + "px";
     img.style.top = parseInt(backgroundDiv.style.height) / 2 - parseInt(img.style.height) / 2 + "px";
