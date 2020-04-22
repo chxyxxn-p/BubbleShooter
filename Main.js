@@ -5,7 +5,7 @@ var gameClearScore = 50;
 var backgroundDiv;
 var scoreDiv;
 
-var ballFileNameArr = ["red", "yellow", "green", "blue", "purple"]; //index : 5 -> ball 생성 X
+var ballFileNameArr = ["red", "orange", "yellow", "green", "blue", "purple"]; //index : 9 -> ball 생성 X
 var ballRadius;
 var gameBallRow = 20;
 var ballSpeed = screen.width / 75;
@@ -22,7 +22,7 @@ var gameBallColorMapArr = [
     [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
     [5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
     [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
-    [1, 5, 5, 5, 5, 5, 5, 5, 5, 1],
+    [1, 5, 9, 5, 9, 5, 5, 9, 5, 1],
     [5, 1, 5, 5, 5, 5, 5, 5, 5, 1, 5],
     [5, 1, 5, 2, 3, 2, 5, 5, 1, 5],
     [5, 5, 1, 5, 5, 5, 5, 5, 1, 5, 5],
@@ -79,26 +79,18 @@ function bodyLayoutInit() {
     backgroundDiv.style.position = "relative";
     backgroundDiv.style.margin = "auto";
     backgroundDiv.style.overflow = "hidden";
-    backgroundDiv.style.backgroundImage = "url('./images/Anticipation_cc_cut.svg')";
+    backgroundDiv.style.backgroundImage = "url('./images/background_f.jpg')";
+    backgroundDiv.style.backgroundSize = "cover";
     document.body.appendChild(backgroundDiv);
 
     // ballRadius value set (backgroundDiv width값이 정해진 후 비율에 맞도록)
-    ballRadius = parseInt(parseInt(backgroundDiv.style.width) / 11) / 2;
+    ballRadius = parseInt(parseInt(backgroundDiv.style.width) / 11) / 2 - 1;
 }
 
 function createUserBallShooter() {
-    // 1) 화살표
-    pointerImg = document.createElement("img");
-    pointerImg.src = "./images/pointer.png";
-    pointerImg.style.width = ballRadius + "px";
-    pointerImg.style.height = ballRadius * 6 + "px";
-    pointerImg.style.position = "absolute";
-    pointerImg.style.left = parseInt(backgroundDiv.style.width) / 2 - parseInt(pointerImg.style.width) / 2 + "px";
-    pointerImg.style.top = parseInt(backgroundDiv.style.height) - ballRadius * 3 - parseInt(pointerImg.style.height) + "px";
-    pointerImg.style.transformOrigin = "bottom";
-    backgroundDiv.appendChild(pointerImg);
+    
 
-    // 2) gamegameBallRow 수의 두배 만큼 userBall 생성
+    // gamegameBallRow 수의 두배 만큼 userBall 생성
     for (var i = 0; i < gameBallRow * 2; i++) {
         var randomColorNum = parseInt(Math.random() * ballFileNameArr.length);
 
@@ -112,8 +104,16 @@ function createUserBallShooter() {
         userBallArr.push(gbTemp);  //userBallArr에 push
     }
 
-    //3) shooter 받침대
-
+    // 화살표
+    pointerImg = document.createElement("img");
+    pointerImg.src = "./images/ballPointer_" + ballFileNameArr[userBallArr[0].colorNum] + ".png";
+    pointerImg.style.width = ballRadius + "px";
+    pointerImg.style.height = ballRadius * 30 + "px";
+    pointerImg.style.position = "absolute";
+    pointerImg.style.left = parseInt(backgroundDiv.style.width) / 2 - parseInt(pointerImg.style.width) / 2 + "px";
+    pointerImg.style.top = parseInt(backgroundDiv.style.height) - ballRadius * 3 - parseInt(pointerImg.style.height) + "px";
+    pointerImg.style.transformOrigin = "bottom";
+    backgroundDiv.appendChild(pointerImg);
 }
 
 function createGameBalls() {
@@ -125,7 +125,7 @@ function createGameBalls() {
         for (var j = 0; j < (i % 2 == 0 ? 11 : 10); j++) {
             var randomColorNum = parseInt(Math.random() * ballFileNameArr.length);
             // var randomColorNum = gameBallColorMapArr[i][j];
-            if (randomColorNum != 5) {
+            if (randomColorNum != 9) {
                 var gbTemp = new GameBall(
                     randomColorNum,
                     "./images/ball_" + ballFileNameArr[randomColorNum] + ".png",
@@ -214,6 +214,8 @@ function gameLoop() {
 }
 
 function movePointerImg() {
+    pointerImg.src = "./images/ballPointer_" + ballFileNameArr[userBallArr[0].colorNum] + ".png";
+
     if (userBallShootReadyFlag) {
         if (pointerImgRotateDeg > 70 || pointerImgRotateDeg < -70) {
             pointerImgSpeed *= -1;
@@ -314,6 +316,7 @@ function moveGameBallImgs(i) {
     // gameBallDiv.style.top = parseInt(gameBallDiv.style.top) + ballRadius * 2 + "px";
 
     gameBallArr[i].centerY += ballRadius;
+    
 
 }
 
