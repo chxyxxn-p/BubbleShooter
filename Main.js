@@ -1,6 +1,6 @@
 var gameSpeed = 30;
 var gameScore = 0;
-var gameClearScore = 50;
+var gameGoalScore = 100;
 
 var backgroundDiv;
 var scoreDiv;
@@ -69,7 +69,7 @@ function bodyLayoutInit() {
     scoreDiv.style.fontSize = screen.height * 0.025 + "pt";
     scoreDiv.style.fontWeight = "bold";
     scoreDiv.style.textAlign = "left";
-    scoreDiv.innerHTML = "SCORE : " + gameScore;
+    scoreDiv.innerHTML = "GOAL : " + gameGoalScore + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspSCORE : " + gameScore;
     document.body.appendChild(scoreDiv);
 
     // backgroundDiv create, style
@@ -252,7 +252,7 @@ function checkCollisionAfterShootUserBall() {
 
                     // 부딪힌 게임볼, 그 게임볼 주변 여섯개의 게임볼(총 7개)을 색상 검사하여 removeChild, gameBallArr에서 삭제
                     gameScore += checkColorAroundRemovedBall(backgroundDiv, gameBallArr, removeCheckGameBallArr, removeCheckGameBallArr[0]);
-                    scoreDiv.innerHTML = "SCORE : " + gameScore;
+                    scoreDiv.innerHTML = "GOAL : " + gameGoalScore + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspSCORE : " + gameScore;
                 }
                 // 발사했던 userBall도 removeChild
                 backgroundDiv.removeChild(userBallArr[0].img);
@@ -331,7 +331,7 @@ function checkGameOver(i) {
 }
 
 function checkGameClear(){
-    if (gameScore >= gameClearScore) {
+    if (gameScore >= gameGoalScore) {
         clearTimeout(gameLoopVar);
         console.log("game clear");
         createGameOverOrClearImg(1);
