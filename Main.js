@@ -1,7 +1,6 @@
-var gameSpeed = 30;
+var gameSpeed = 30; //call gameLoop in setTimeout
 var gameScore = 0;
 var gameGoalScore = 100;
-var scoreTemp = 0;
 
 var backgroundDiv;
 var scoreDiv;
@@ -88,7 +87,7 @@ function bodyLayoutInit() {
     ballRadius = parseInt(parseInt(backgroundDiv.style.width) / 11) / 2;
 }
 
-function createUserBallShooter() {  
+function createUserBallShooter() {
 
     // gameBallRow 수의 두배 만큼 userBall 생성
     for (var i = 0; i < gameBallRow * 2; i++) {
@@ -126,16 +125,16 @@ function createGameBalls() {
             var randomColorNum = parseInt(Math.random() * ballFileNameArr.length);
             // var randomColorNum = gameBallColorMapArr[i][j];
             // if (randomColorNum != 9) {
-                var gbTemp = new GameBall(
-                    randomColorNum,
-                    "./images/ball_" + ballFileNameArr[randomColorNum] + ".png",
-                    backgroundDiv,  //container / backgroundDiv
-                    gap + (1 + 2 * j + i % 2) * ballRadius,    //centerX / gap + 1*r : 기본적으로 띄워질 부분, 2*j*r : 몇번째 공인지에 따라 간격 넓어짐, i%2*r : 한줄씩 번갈아가면서 갯수가 달라짐 
-                    -screen.height + ballRadius * 14 + (ballRadius + i * (5 / 3 * ballRadius)),
-                    //centerY / screen.height만큼 화면 위로(-방향으로) 이동, ballRadius*10만큼만 아래로(+방향으로) 이동 [여기까지 기본 위치], r : centerY값은 기본 위치에서 반지름만큼 떨어져있음, i*(5/3)*r : 몇번째 공인지에 따라 간격 넓어짐
-                    ballRadius);    //radius
+            var gbTemp = new GameBall(
+                randomColorNum,
+                "./images/ball_" + ballFileNameArr[randomColorNum] + ".png",
+                backgroundDiv,  //container / backgroundDiv
+                gap + (1 + 2 * j + i % 2) * ballRadius,    //centerX / gap + 1*r : 기본적으로 띄워질 부분, 2*j*r : 몇번째 공인지에 따라 간격 넓어짐, i%2*r : 한줄씩 번갈아가면서 갯수가 달라짐 
+                -screen.height + ballRadius * 14 + (ballRadius + i * (5 / 3 * ballRadius)),
+                //centerY / screen.height만큼 화면 위로(-방향으로) 이동, ballRadius*10만큼만 아래로(+방향으로) 이동 [여기까지 기본 위치], r : centerY값은 기본 위치에서 반지름만큼 떨어져있음, i*(5/3)*r : 몇번째 공인지에 따라 간격 넓어짐
+                ballRadius);    //radius
 
-                gameBallArr.push(gbTemp);
+            gameBallArr.push(gbTemp);
             // }
         }
     }
@@ -169,8 +168,6 @@ function moveUserBallImgs() {
 }
 
 function gameLoop() {
-    // console.log("gameLoop() called...");
-
     // 1) pointerImg 이동
     movePointerImg();
 
@@ -188,7 +185,7 @@ function gameLoop() {
 
     // if (userBallShootReadyFlag) {
     //     // userBall 이동 중(readyFlag가 false일 때) gameBallImg들이 움직이면 충돌 오류 -> 그래도 오류 有
-        gameBallImgsMoveCount++;
+    gameBallImgsMoveCount++;
     // }
     if (gameBallImgsMoveCount >= (gameBallMoveSpeed / gameSpeed)) {
         for (var i = 0; i < gameBallArr.length; i++) {
@@ -237,25 +234,38 @@ function checkCollisionAfterShootUserBall() {
         // 충돌했을 경우
         if (ballCollisionCheck(gameBallArr[i], userBallArr[0])) {
 
-            console.log("collision! " + ballFileNameArr[gameBallArr[i].colorNum] + "," + ballFileNameArr[userBallArr[0].colorNum]);
+            console.log("collision! gameBall : " + ballFileNameArr[gameBallArr[i].colorNum] + ", userBall : " + ballFileNameArr[userBallArr[0].colorNum]);
 
             // 같은 색일 경우 : userBall, gameBall 삭제 -> 삭제된 gameBall 주변 gameBall 반복 검사 후 삭제체크할배열에 삭제된 gameBall push
             if (gameBallArr[i].colorNum == userBallArr[0].colorNum) {
                 removeCheckGameBallArr.push(gameBallArr[i]);
+                backgroundDiv.removeChild(gameBallArr[i].img);
+                gameBallArr.splice(i, 1);
+                gameScore += 20;
+                scoreDiv.innerHTML = "GOAL : " + gameGoalScore + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspSCORE : " + gameScore;
+                // console.log("remove shooted userball");
+                console.log("userBall remove -> score : " + gameScore);
 
                 // 반복작업하여 연쇄삭제
                 while (true) {
-                    console.log(removeCheckGameBallArr);
 
-                    // console.log(removeCheckGameBallArr.length);
                     if (removeCheckGameBallArr.length == 0) {
                         break;
                     }
 
                     // 부딪힌 게임볼, 그 게임볼 주변 여섯개의 게임볼(총 7개)을 색상 검사하여 removeChild, gameBallArr에서 삭제
-                    gameScore += checkColorAroundRemovedBall(backgroundDiv, gameBallArr, removeCheckGameBallArr, removeCheckGameBallArr[0]);
+                    var scoreTemp = checkColorAroundRemovedBall(backgroundDiv, gameBallArr, removeCheckGameBallArr, removeCheckGameBallArr[0]);
+                    // console.log(checkColorAroundRemovedBall(backgroundDiv, gameBallArr, removeCheckGameBallArr, removeCheckGameBallArr[0]));
+
+                    console.log("same color scoreTemp : " + scoreTemp);
+
+                    gameScore += scoreTemp;
                     scoreDiv.innerHTML = "GOAL : " + gameGoalScore + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspSCORE : " + gameScore;
+                    console.log("same color while remove -> score : " + gameScore);
+                    
+
                 }
+
                 // 발사했던 userBall도 removeChild
                 backgroundDiv.removeChild(userBallArr[0].img);
             }
@@ -263,15 +273,16 @@ function checkCollisionAfterShootUserBall() {
             // 다른 색일 경우
             else {
                 // 발사된 userBall 멈추기
-                userBallArr[0].centerY = gameBallArr[i].centerY + (5 / 3 * ballRadius);
 
-                if (userBallArr[0].centerX < gameBallArr[i].centerX) {
-                    userBallArr[0].centerX = gameBallArr[i].centerX - ballRadius;
-                } else {
-                    userBallArr[0].centerX = gameBallArr[i].centerX + ballRadius;
-                }
+                // userBallArr[0].centerY = gameBallArr[i].centerY + (5 / 3 * ballRadius);
 
-                // setShootedBallCenterValue(gameBallArr[i], userBallArr[0]);
+                // if (userBallArr[0].centerX < gameBallArr[i].centerX) {
+                //     userBallArr[0].centerX = gameBallArr[i].centerX - ballRadius;
+                // } else {
+                //     userBallArr[0].centerX = gameBallArr[i].centerX + ballRadius;
+                // }
+
+                setShootedBallCenterValue(gameBallArr[i], userBallArr[0]);
 
                 userBallArr[0].render();
 
@@ -280,6 +291,27 @@ function checkCollisionAfterShootUserBall() {
 
                 // userBallArr -> gameBallArr에 새로 추가
                 gameBallArr.push(userBallArr[0]);
+
+                // 발사된 userBall이 처음으로 충돌한 gameBall과 다른 색이기때문에 정렬되어 부착 -> 정렬 후 같은 색을 만날 경우
+                removeCheckGameBallArr.push(userBallArr[0]);
+                // 반복작업하여 연쇄삭제
+
+                while (true) {
+
+                    if (removeCheckGameBallArr.length == 0) {
+                        break;
+                    }
+
+                    // 부딪힌 게임볼, 그 게임볼 주변 여섯개의 게임볼(총 7개)을 색상 검사하여 removeChild, gameBallArr에서 삭제
+                    var scoreTemp = checkColorAroundRemovedBall(backgroundDiv, gameBallArr, removeCheckGameBallArr, removeCheckGameBallArr[0]);
+                    // console.log(checkColorAroundRemovedBall(backgroundDiv, gameBallArr, removeCheckGameBallArr, removeCheckGameBallArr[0]));
+                    console.log("different color scoreTemp : " + scoreTemp);
+                    gameScore += scoreTemp;
+                    scoreDiv.innerHTML = "GOAL : " + gameGoalScore + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspSCORE : " + gameScore;
+                    console.log("different color while remove -> score : " + gameScore);
+
+                }
+
             }
             // userBallArr에서 삭제
             userBallArr.splice(0, 1);
@@ -291,34 +323,71 @@ function checkCollisionAfterShootUserBall() {
     }
 }
 
-// function setShootedBallCenterValue(gb, ub) {
-//     var ux = ub.centerX;
-//     var uy = ub.centerY;
-//     var gx = gb.centerX;
-//     var gy = gb.centerY;
+function setShootedBallCenterValue(gb, ub) {
+    var ux = ub.centerX;
+    var uy = ub.centerY;
+    var gx = gb.centerX;
+    var gy = gb.centerY;
 
-//     if (ux < gx) {
-//         userBallArr[0].centerX = gx - ballRadius;
-//     } else {
-//         userBallArr[0].centerX = gx + ballRadius;
-//     }
+    var tx, ty;
+    var tBallColorNum = 9;
 
-//     if (uy < gy - 5/3*ballRadius) {
-//         userBallArr[0].centerY = gy - 5/3*ballRadius;
-//     } else if (uy < gy + 5/3*ballRadius) {
-//         userBallArr[0].centerY = gy;
-//     } else {
-//         userBallArr[0].centerY = gy + 5/3*ballRadius;
-//     }
+    while (true) {
 
-// }
+        // console.log("tBallColorNum : " + tBallColorNum);
+
+        if (ux < gx) {
+            tx = gx - ballRadius;
+        } else {
+            tx = gx + ballRadius;
+        }
+
+        ty = gy + (5 / 3 * ballRadius);
+
+        // console.log("tx : " + tx + "   ty : " + ty);
+
+        // if (uy < gy - 5/3*ballRadius) {
+        //     ty = gy - 5/3*ballRadius;
+        // } else if (uy < gy + 5/3*ballRadius) {
+        //     ty = gy;
+        // } else {
+        //     ty = gy + 5/3*ballRadius;
+        // }
+
+        for (var i = gameBallArr.length - 1; i >= 0; i--) {
+            if (gameBallArr[i].centerX == tx && gameBallArr[i].centerY == ty) {
+                tBallColorNum = gameBallArr[i].colorNum;
+                console.log("tBallColorNum : " + tBallColorNum);
+                break;
+            }
+        }
+
+        if (tBallColorNum == 9) {
+            userBallArr[0].centerX = tx;
+            userBallArr[0].centerY = ty;
+            console.log("userBall center set");
+            break;
+        } else {
+            gx = tx;
+            gy = ty;
+            // userBallArr[0].centerX = tx;
+            // userBallArr[0].centerY = ty + 5/3*ballRadius;
+            console.log("gx = tx / gy = ty");
+            tBallColorNum = 9;
+            // break;
+
+        }
+    }
+
+
+}
 
 function moveGameBallImgs(i) {
     // gameLoop() 돌 때마다 gameBallDiv는 공 지름크기만큼 아래로 내려옴
     // gameBallDiv.style.top = parseInt(gameBallDiv.style.top) + ballRadius * 2 + "px";
 
     gameBallArr[i].centerY += ballRadius;
-    
+
 
 }
 
@@ -332,7 +401,7 @@ function checkGameOver(i) {
     return gameOverFlag;
 }
 
-function checkGameClear(){
+function checkGameClear() {
     if (gameScore >= gameGoalScore) {
         clearTimeout(gameLoopVar);
         console.log("game clear");
@@ -340,18 +409,20 @@ function checkGameClear(){
     }
 }
 
-function createGameOverOrClearImg(n){
+function createGameOverOrClearImg(n) {
+    scoreDiv.innerHTML = "GOAL : " + gameGoalScore + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspSCORE : " + gameScore;
+
     var background = document.createElement("img");
-     // n == 0 : gameOver , n == 1 : gameClear
+    // n == 0 : gameOver , n == 1 : gameClear
     background.src = "./images/gameClearBackground.png";
-    background.style.width = parseInt(backgroundDiv.style.width)+ "px";
+    background.style.width = parseInt(backgroundDiv.style.width) + "px";
     background.style.height = parseInt(backgroundDiv.style.height) + "px";
     background.style.position = "absolute";
     background.style.left = background.style.top = 0 + "px";
     backgroundDiv.appendChild(background);
 
     var img = document.createElement("img");
-                                       // n == 0 : gameOver , n == 1 : gameClear
+    // n == 0 : gameOver , n == 1 : gameClear
     img.src = (n == 0) ? "./images/gameOver.png" : "./images/gameClear.png";
     img.style.width = parseInt(backgroundDiv.style.width) / 2 + "px";
     img.style.height = parseInt(backgroundDiv.style.width) / 2 + "px";
