@@ -1,6 +1,6 @@
 var gameSpeed = 30; //call gameLoop in setTimeout
 var gameScore = 0;
-var gameGoalScore = 100;
+var gameGoalScore = 200;
 
 var backgroundDiv;
 var scoreDiv;
@@ -69,7 +69,7 @@ function bodyLayoutInit() {
     scoreDiv.style.fontSize = screen.height * 0.025 + "pt";
     scoreDiv.style.fontWeight = "bold";
     scoreDiv.style.textAlign = "left";
-    scoreDiv.innerHTML = "GOAL : " + gameGoalScore + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspSCORE : " + gameScore;
+    scoreDiv.innerHTML = "👉🏻GOAL : " + gameGoalScore + "  👉🏻SCORE : " + gameScore;
     document.body.appendChild(scoreDiv);
 
     // backgroundDiv create, style
@@ -242,7 +242,7 @@ function checkCollisionAfterShootUserBall() {
                 backgroundDiv.removeChild(gameBallArr[i].img);
                 gameBallArr.splice(i, 1);
                 gameScore += 20;
-                scoreDiv.innerHTML = "GOAL : " + gameGoalScore + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspSCORE : " + gameScore;
+                scoreDiv.innerHTML = "👉🏻GOAL : " + gameGoalScore + "  👉🏻SCORE : " + gameScore;
                 // console.log("remove shooted userball");
                 console.log("userBall remove -> score : " + gameScore);
 
@@ -260,7 +260,7 @@ function checkCollisionAfterShootUserBall() {
                     console.log("same color scoreTemp : " + scoreTemp);
 
                     gameScore += scoreTemp;
-                    scoreDiv.innerHTML = "GOAL : " + gameGoalScore + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspSCORE : " + gameScore;
+                    scoreDiv.innerHTML = "👉🏻GOAL : " + gameGoalScore + "  👉🏻SCORE : " + gameScore;
                     console.log("same color while remove -> score : " + gameScore);
                     
 
@@ -307,7 +307,7 @@ function checkCollisionAfterShootUserBall() {
                     // console.log(checkColorAroundRemovedBall(backgroundDiv, gameBallArr, removeCheckGameBallArr, removeCheckGameBallArr[0]));
                     console.log("different color scoreTemp : " + scoreTemp);
                     gameScore += scoreTemp;
-                    scoreDiv.innerHTML = "GOAL : " + gameGoalScore + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspSCORE : " + gameScore;
+                    scoreDiv.innerHTML = "👉🏻GOAL : " + gameGoalScore + "  👉🏻SCORE : " + gameScore;
                     console.log("different color while remove -> score : " + gameScore);
 
                 }
@@ -325,7 +325,6 @@ function checkCollisionAfterShootUserBall() {
 
 function setShootedBallCenterValue(gb, ub) {
     var ux = ub.centerX;
-    var uy = ub.centerY;
     var gx = gb.centerX;
     var gy = gb.centerY;
 
@@ -392,13 +391,16 @@ function moveGameBallImgs(i) {
 }
 
 function checkGameOver(i) {
-    var gameOverFlag = gameBallArr[i].centerY >= parseInt(backgroundDiv.style.height) - ballRadius * 6;
-    if (gameOverFlag) {
+    var gameOverByGameBallFlag = gameBallArr[i].centerY >= parseInt(backgroundDiv.style.height) - ballRadius * 6;
+    
+    var gameOverByUserBallFlag = (userBallArr.length == 0) ? true : false;
+
+    if (gameOverByGameBallFlag || gameOverByUserBallFlag) {
         clearTimeout(gameLoopVar);
         console.log("game over");
         createGameOverOrClearImg(0);
     }
-    return gameOverFlag;
+    return (gameOverByGameBallFlag||gameOverByUserBallFlag);
 }
 
 function checkGameClear() {
@@ -410,7 +412,7 @@ function checkGameClear() {
 }
 
 function createGameOverOrClearImg(n) {
-    scoreDiv.innerHTML = "GOAL : " + gameGoalScore + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspSCORE : " + gameScore;
+    scoreDiv.innerHTML = "👉🏻GOAL : " + gameGoalScore + "  👉🏻SCORE : " + gameScore;
 
     var background = document.createElement("img");
     // n == 0 : gameOver , n == 1 : gameClear
