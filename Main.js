@@ -423,7 +423,7 @@ function createGameOverOrClearImg(n) {
 
     var img = document.createElement("img");
     // n == 0 : gameOver , n == 1 : gameClear
-    img.src = (n == 0) ? "./images/gameOver.png" : "./images/gameClear.png";
+    img.src = (n == 0) ? "./images/gameOverText.png" : "./images/gameClearText.png";
     img.style.width = parseInt(backgroundDiv.style.width) / 2 + "px";
     img.style.height = parseInt(backgroundDiv.style.width) / 2 + "px";
     img.style.position = "absolute";
